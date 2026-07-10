@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>太古小學「太」好玩 AI 探索之旅：任務大考驗</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts for Friendly Look -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Noto+Sans+TC:wght@300..900&display=swap" rel="stylesheet">
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Fredoka', 'Noto Sans TC', 'sans-serif'],
+          },
+          colors: {
+            taikoo: {
+              red: '#da283e',
+              lightred: '#fdf2f2',
+              blue: '#0f57a0',
+              lightblue: '#eef4fa',
+              green: '#3CB371',
+              lightgreen: '#E8F5E9',
+              orange: '#FF8C00',
+              lightorange: '#FFF3E0',
+              yellow: '#FFD700',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Fredoka', 'Noto Sans TC', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      position: relative;
+    }
+    /* 滿版透視校園背景圖 */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url('https://i.postimg.cc/sxXd1N49/xue-xiao-wai-guan-tu-(1).jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      opacity: 0.12; /* 透透地、不干擾閱讀 */
+      z-index: -1;
+      pointer-events: none;
+    }
+    .badge-bounce {
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #0f57a0;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-b from-slate-50/50 via-sky-50/20 to-rose-50/10 min-h-screen text-slate-800 pb-20">
+
+  <!-- 🎮 遊戲啟動起跑畫面 (Splash Screen) -->
+  <div id="splash-screen" class="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center p-6 text-center select-none overflow-hidden">
+    <!-- 校園背景半透明浮雕效果 -->
+    <div class="absolute inset-0 bg-cover bg-center opacity-10 pointer-events-none" style="background-image: url('https://i.postimg.cc/sxXd1N49/xue-xiao-wai-guan-tu-(1).jpg');"></div>
+    
+    <div class="relative z-10 max-w-md mx-auto space-y-8 flex flex-col items-center">
+      <img src="https://i.postimg.cc/L59w5zmd/images.png" alt="太古小學校徽" class="w-28 h-24 object-contain badge-bounce drop-shadow-md mb-2">
+      <div class="space-y-3">
+        <h1 class="text-2xl md:text-3xl font-black text-taikoo-blue leading-none tracking-wide">太古小學</h1>
+        <h2 class="text-3xl md:text-4xl font-black text-taikoo-red tracking-wider drop-shadow-sm leading-snug animate-pulse">
+          「太」好玩 AI 探索之旅<br><span class="text-taikoo-blue text-2xl md:text-3xl">任務大考驗</span>
+        </h2>
+      </div>
+      <p class="text-slate-600 text-sm md:text-base font-semibold max-w-sm leading-relaxed px-4">
+        親愛的小活動小朋友和家長，歡迎來到太古小學！我們今天準備了 13 個好玩又富教育意義的探索關卡。點擊按鈕，立刻開啟你們的 AI 健康大冒險吧！ 🚀
+      </p>
+      
+      <button onclick="startGame()" class="w-64 py-4 bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-900 font-black rounded-3xl shadow-xl hover:shadow-2xl transition transform active:scale-95 text-lg tracking-widest border-b-8 border-amber-700 mt-4 badge-bounce">
+        <i class="fa-solid fa-play mr-2"></i> 開始探索之旅！
+      </button>
+    </div>
+  </div>
+
+  <!-- 🎮 核心遊戲面板 (預設隱藏，點擊開始遊戲後展示) -->
+  <div id="game-board" class="hidden">
+    <!-- 頂部導航及校徽 -->
+    <header class="bg-white/95 backdrop-blur-md shadow-md sticky top-0 z-40 px-4 py-3 border-b-4 border-taikoo-blue">
+      <div class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-0">
+        <div class="flex items-center space-x-3">
+          <!-- 太古小學官方校徽圖片 -->
+          <img src="https://i.postimg.cc/L59w5zmd/images.png" alt="太古小學校徽" class="w-12 h-12 object-contain drop-shadow-sm">
+          <div>
+            <h1 class="text-lg font-black text-slate-800 leading-none tracking-wide">太古小學</h1>
+            <p class="text-[11px] text-taikoo-blue font-bold mt-1">「太」好玩 AI 探索之旅：任務大考驗</p>
+          </div>
+        </div>
+        
+        <!-- 右上角 導航與地圖按鈕 -->
+        <div class="flex items-center space-x-2">
+          <!-- 🗺️ 紅色地圖按鈕 -->
+          <button onclick="openMapModal()" class="bg-taikoo-red text-white border-2 border-red-700 px-3.5 py-1.5 rounded-2xl flex items-center space-x-1.5 shadow-sm hover:bg-red-600 transition active:scale-95">
+            <span class="text-sm">🗺️</span>
+            <span class="text-xs font-black tracking-wide">探索地圖</span>
+          </button>
+
+          <!-- 進度指示器 -->
+          <div class="bg-taikoo-lightgreen border-2 border-taikoo-green/30 px-3.5 py-1.5 rounded-2xl flex items-center space-x-2 shadow-sm">
+            <i class="fa-solid fa-trophy text-taikoo-yellow text-base animate-pulse"></i>
+            <span class="text-xs font-black text-slate-700">通關進度:</span>
+            <span id="global-progress" class="text-base font-black text-taikoo-green">0 / 13</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 主體容器 -->
+    <main class="max-w-4xl mx-auto px-4 mt-6">
+      
+      <!-- 歡迎橫幅 (重新設計，用盡右側空位且排版均衡) -->
+      <div class="bg-taikoo-red rounded-3xl p-6 md:p-8 text-white shadow-xl relative overflow-hidden mb-8 border-b-8 border-red-700">
+        <div class="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+          
+          <!-- 左側文字區域：充分展開 -->
+          <div class="md:col-span-9 space-y-3">
+            <span class="bg-white/20 text-xs font-bold px-3 py-1.5 rounded-full uppercase tracking-wider"><i class="fa-solid fa-wand-magic-sparkles mr-1"></i> AI Kids Adventure!</span>
+            <h2 class="text-2xl md:text-3xl font-black leading-tight">歡迎來到太古「太」好玩 AI 探索之旅！</h2>
+            <p class="text-sm text-rose-50 leading-relaxed font-medium">
+              親愛的小朋友和家長，歡迎來到太古小學！我們今天在各個樓層為你們準備了 **13 個好玩又富教育意義的 AI 探索任務**。在各個關卡完成實體挑戰或互動後，收集與太古相關的神秘密碼即可通關。只要集齊所有徽章即表示成功通關！快來與家人一起挑戰這 13 個奇妙關卡吧！
+            </p>
+            <div class="pt-2 flex flex-wrap gap-2">
+              <span class="bg-white/10 text-white backdrop-blur-sm text-xs font-bold px-3 py-1.5 rounded-xl border border-white/20"><i class="fa-solid fa-map-marker-alt mr-1"></i> 地下 ‧ 1樓 ‧ 2樓 ‧ 3樓 ‧ 4樓 ‧ 梯間</span>
+              <span class="bg-taikoo-blue text-white text-xs font-black px-3 py-1.5 rounded-xl shadow-md border border-blue-600"><i class="fa-solid fa-gamepad mr-1"></i> 共 13 個奇妙關卡</span>
+            </div>
+          </div>
+          
+          <!-- 右側浮動徽章：完美填滿原本空白的位置 -->
+          <div class="hidden md:col-span-3 md:flex flex-col items-center justify-center">
+            <div class="w-36 h-36 rounded-full bg-white/10 border-2 border-white/20 flex flex-col items-center justify-center p-4 text-center badge-bounce shadow-inner">
+              <i class="fa-solid fa-trophy text-taikoo-yellow text-4xl mb-1 drop-shadow-md"></i>
+              <span class="text-xs font-black tracking-wider text-yellow-200">AI 探索</span>
+              <span class="text-[10px] font-bold text-white/80 mt-0.5">超級英雄</span>
+            </div>
+          </div>
+
+        </div>
+        <div class="absolute -right-8 -bottom-8 w-40 h-40 bg-white/10 rounded-full blur-xl"></div>
+        <div class="absolute right-10 top-6 w-16 h-16 bg-white/20 rounded-full blur-lg"></div>
+      </div>
+
+      <!-- 樓層篩選切換 -->
+      <div class="flex space-x-2 overflow-x-auto pb-3 mb-6 scrollbar-none">
+        <button onclick="filterFloor('all')" id="tab-all" class="floor-tab active px-5 py-2.5 bg-taikoo-green text-white font-bold rounded-2xl shadow-md shadow-emerald-100 transition-all text-sm whitespace-nowrap">
+          <i class="fa-solid fa-grid-2 mr-1"></i> 全部關卡 (13)
+        </button>
+        <button onclick="filterFloor('gf')" id="tab-gf" class="floor-tab px-5 py-2.5 bg-white text-slate-600 hover:text-taikoo-green font-bold rounded-2xl shadow-sm hover:shadow-md transition-all text-sm whitespace-nowrap">
+          <i class="fa-solid fa-school mr-1"></i> 地下有蓋操場 (4)
+        </button>
+        <button onclick="filterFloor('1f')" id="tab-1f" class="floor-tab px-5 py-2.5 bg-white text-slate-600 hover:text-taikoo-green font-bold rounded-2xl shadow-sm hover:shadow-md transition-all text-sm whitespace-nowrap">
+          <i class="fa-solid fa-building mr-1"></i> 一樓及梯間 (3)
+        </button>
+        <button onclick="filterFloor('upper')" id="tab-upper" class="floor-tab px-5 py-2.5 bg-white text-slate-600 hover:text-taikoo-green font-bold rounded-2xl shadow-sm hover:shadow-md transition-all text-sm whitespace-nowrap">
+          <i class="fa-solid fa-arrow-up-right-dots mr-1"></i> 二樓至四樓 (6)
+        </button>
+      </div>
+
+      <!-- 任務卡片網格 -->
+      <div id="missions-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- 任務卡片由 JavaScript 動態生成 -->
+      </div>
+
+    </main>
+  </div>
+
+  <!-- 🗺️ 探索地圖 彈出模態框 -->
+  <div id="map-modal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white w-full max-w-2xl rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh] border-4 border-taikoo-red">
+      <div class="bg-gradient-to-r from-taikoo-red to-red-600 p-5 text-white flex justify-between items-center border-b-4 border-red-700">
+        <h3 class="text-lg font-bold flex items-center"><span class="mr-2">🗺️</span> 太古小學 AI 探索之旅：活動地圖</h3>
+        <button onclick="closeMapModal()" class="text-white/80 hover:text-white bg-black/10 hover:bg-black/25 p-1.5 rounded-full transition">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="p-6 overflow-y-auto bg-slate-100 flex-1 flex items-center justify-center">
+        <img src="https://i.postimg.cc/VkxRLbT3/Whats-App-Image-2026-07-08-at-7-20-17-PM.jpg" alt="太古小學 AI探索地圖" class="max-w-full max-h-[65vh] object-contain rounded-2xl shadow-xl border-4 border-white">
+      </div>
+      <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-end">
+        <button onclick="closeMapModal()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl transition text-sm">
+          關閉地圖
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 🏆 全通關大賀喜 彈出模態框 (全新高調合照介面，無證書功能) -->
+  <div id="congrats-modal" class="fixed inset-0 bg-slate-900/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden animate-fade-in">
+    <div class="bg-white w-full max-w-md rounded-3xl overflow-hidden shadow-2xl border-8 border-taikoo-yellow text-center p-8 relative space-y-6">
+      
+      <!-- 紙花禮炮裝飾 background decoration icon -->
+      <div class="text-7xl badge-bounce inline-block">🏆</div>
+      
+      <div class="space-y-2">
+        <h3 class="text-3xl font-black text-taikoo-red leading-tight animate-pulse">超級大恭喜！</h3>
+        <h4 class="text-2xl font-black text-slate-800 leading-snug">你已成功挑戰 13 個關卡！</h4>
+      </div>
+      
+      <div class="bg-amber-50 rounded-2xl p-4 border border-amber-200">
+        <p class="text-sm text-amber-900 font-bold leading-relaxed">
+          親愛的小朋友和家長：<br>
+          太古小學全體教職員熱烈恭喜你們！你們發揮了無比的智慧與親子默契，圓滿完成了所有的 AI 與健康大挑戰，正式成為
+          <span class="text-taikoo-blue font-extrabold text-base">「太古 AI 探索小使者」</span>！🌟
+        </p>
+      </div>
+
+      <p class="text-xs text-slate-400 font-medium">歡迎家長與小朋友手持此通關畫面，在現場進行合照留念！📷</p>
+
+      <button onclick="closeCongratsModal()" class="w-full py-4 bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-900 font-black rounded-2xl shadow-lg transition transform active:scale-95 text-md tracking-wider">
+        太棒了！返回主頁
+      </button>
+
+      <div class="absolute -top-6 -left-6 w-16 h-16 text-3xl animate-spin">✨</div>
+      <div class="absolute -bottom-6 -right-6 w-16 h-16 text-3xl animate-bounce">🎈</div>
+    </div>
+  </div>
+
+  <!-- 任務詳情 彈出模態框 -->
+  <div id="mission-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-white w-full max-w-lg rounded-3xl overflow-hidden shadow-2xl transform transition-all flex flex-col max-h-[90vh]">
+      <!-- 模態框頂部 -->
+      <div id="modal-header" class="p-6 text-white flex justify-between items-start">
+        <div>
+          <span id="modal-badge-floor" class="bg-white/20 text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider"></span>
+          <h3 id="modal-title" class="text-xl font-black mt-2">任務標題</h3>
+        </div>
+        <button onclick="closeMissionModal()" class="text-white/80 hover:text-white bg-black/10 hover:bg-black/25 p-2 rounded-full transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- 模態框內容 (可滾動) -->
+      <div class="p-6 overflow-y-auto flex-1 space-y-4 text-slate-700">
+        <div class="flex items-center space-x-4 bg-slate-50 p-4 rounded-2xl">
+          <!-- Modal 圓形 Logo 容器 (w-32 h-32) -->
+          <div id="modal-icon-container" class="w-32 h-32 rounded-full overflow-hidden flex items-center justify-center shrink-0 shadow-inner"></div>
+          <div>
+            <p class="text-xs text-slate-500 font-medium">活動地點</p>
+            <p id="modal-location" class="text-base font-bold text-slate-800 leading-snug"></p>
+          </div>
+        </div>
+
+        <div>
+          <h4 class="font-bold text-slate-800 mb-1"><i class="fa-solid fa-circle-info text-emerald-500 mr-1"></i> 關卡任務介紹</h4>
+          <p id="modal-description" class="text-sm leading-relaxed text-slate-600"></p>
+        </div>
+
+        <!-- 交互區域 -->
+        <div id="modal-interactive-area" class="border-t border-slate-100 pt-4 space-y-4">
+          <!-- 動態注入內容 -->
+        </div>
+      </div>
+
+      <!-- 模態框底部 -->
+      <div class="p-6 bg-slate-50 border-t border-slate-100 flex justify-between items-center">
+        <span id="modal-status-pill" class="text-xs font-bold px-3 py-1.5 rounded-full"></span>
+        <button onclick="closeMissionModal()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl transition text-sm">
+          關閉
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 音效模擬 -->
+  <div id="custom-toast" class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-slate-900/90 text-white px-5 py-3 rounded-full shadow-2xl flex items-center space-x-2 z-50 transition-all opacity-0 pointer-events-none">
+    <span id="toast-icon"></span>
+    <span id="toast-message" class="text-sm font-bold"></span>
+  </div>
+
+  <script>
+    // 任務資料結構 (13 個任務)
+    const missions = [
+      {
+        id: 1,
+        floor: 'gf',
+        floorLabel: '地下有蓋操場',
+        title: '任務１：「太」幸福花園',
+        location: '地下有蓋操場 ‧ 「太」幸福花園區',
+        icon: 'fa-leaf',
+        iconBg: 'bg-emerald-100 text-emerald-600',
+        img: 'https://i.postimg.cc/vHh7Q6C4/DSC05716.jpg',
+        color: 'from-emerald-500 to-teal-500',
+        description: '在太古小學的「幸福花園」內，運用 AI 李時珍辨識中草藥及其特徵，並與家長一起把正確的標示牌配對到相應的植物上。這可以讓我們從小學會大自然草本的健康智慧！',
+        unlockType: 'password',
+        correctPassword: 'QBAY',
+        hint: '完成中草藥配對後，請向義工老師索取太古專屬 4 位大寫英文字母密碼。',
+        completed: false
+      },
+      {
+        id: 2,
+        floor: 'gf',
+        floorLabel: '地下有蓋操場',
+        title: '任務２：「太」輕Zone',
+        location: '地下小食部壁報 & 「太」輕Zone單車區',
+        icon: 'fa-bicycle',
+        iconBg: 'bg-orange-100 text-taikoo-orange',
+        img: 'https://i.postimg.cc/wv9TT3SP/DSC05723.jpg',
+        color: 'from-amber-500 to-orange-500',
+        description: '1. 請先走到「小食部」壁報板，尋找並記下「5粒燒賣的卡路里資料」。\n2. 完成 500米計時賽，輸入現場單車通關密碼。這關需要同時完成卡路里問題及密碼輸入方可通關！',
+        unlockType: 'game_cycle_new', // 雙重驗證方式
+        correctPassword: '2561',
+        hint: '請在下方輸入 5 粒燒賣 of 卡路里以及單車通關密碼。',
+        completed: false
+      },
+      {
+        id: 3,
+        floor: 'gf',
+        floorLabel: '地下有蓋操場',
+        title: '任務３：「太」開心籃球機',
+        location: '地下有蓋操場 ‧ 籃球體驗區',
+        icon: 'fa-basketball',
+        iconBg: 'bg-red-100 text-red-600',
+        img: 'https://i.postimg.cc/8cjrFpZ3/468309067-17887826631113862-3452588766445538453-n.jpg', 
+        color: 'from-orange-500 to-rose-500',
+        description: '親子默契投籃大賽！家長與小朋友需要互相合作，在限定時間內，共同合作達到現場指定的目標分數。',
+        unlockType: 'password',
+        correctPassword: '3550',
+        hint: '與家人現場合力達到指定分數後，向當值的體育老師索取通關密碼。',
+        completed: false
+      },
+      {
+        id: 4,
+        floor: 'gf',
+        floorLabel: '地下有蓋操場',
+        title: '任務４：Talent Zone AI卡通照',
+        location: '地下有蓋操場 ‧ Talent Zone',
+        icon: 'fa-camera-retro',
+        iconBg: 'bg-indigo-100 text-indigo-600',
+        img: 'https://i.postimg.cc/7Zv4Zf74/DSC05728.jpg',
+        color: 'from-blue-500 to-indigo-600',
+        description: '親子合作抽出「健康律動動作圖卡」，做出指定動作並拍一張溫馨親子合照。在這裡可以體驗利用 AI (GEM) 將合照生成卡通相片下載！',
+        unlockType: 'password', // 已由 ai_photo 改為純密碼驗證通關
+        correctPassword: '1923',
+        hint: '體驗完成後，請向現場當值老師索取並輸入 4 位數字通關密碼。', 
+        completed: false
+      },
+      {
+        id: 5,
+        floor: '1f',
+        floorLabel: '一樓及梯間',
+        title: '任務５：圖書館 AI鏡頭大偵探',
+        location: '一樓圖書館',
+        icon: 'fa-magnifying-glass',
+        iconBg: 'bg-teal-100 text-teal-600',
+        img: 'https://i.postimg.cc/0jLTjBzD/DSC05711-(1).jpg',
+        color: 'from-teal-500 to-emerald-600',
+        description: '尋寶隊在圖書館內遊走尋找指定的實體 Emoji 物件（書本 📖、時鐘 ⏰、椅子 🪑）。請用「忍者輕聲步伐」喔！',
+        unlockType: 'password', // 已改為純密碼驗證通關
+        correctPassword: '5555',
+        hint: '完成後請向圖書館當值老師索取幸運 4 位數字密碼通關。',
+        completed: false
+      },
+      {
+        id: 6,
+        floor: '1f',
+        floorLabel: '一樓及梯間',
+        title: '任務６：Star Wall 太古之星',
+        location: '一樓 Star Wall 榮譽牆',
+        icon: 'fa-star',
+        iconBg: 'bg-yellow-100 text-yellow-600',
+        img: 'https://i.postimg.cc/tT1n5Tz2/Whats-App-Image-2026-07-07-at-3-45-26-PM.jpg', 
+        color: 'from-indigo-500 to-purple-600',
+        description: '在 Star Wall 榮譽牆欣賞校友的 Taikoo Star 海報。並回答以下問題：游日翔同學的主項運動是甚麼？',
+        unlockType: 'quiz_m6', // 轉移到任務六
+        correctPassword: 'A',
+        hint: '請在海報中尋找答案，選對正確選項即可通關。',
+        completed: false
+      },
+      {
+        id: 7,
+        floor: '2f',
+        floorLabel: '二樓任務',
+        title: '任務７：太古機艙健康食物分類',
+        location: '二樓太古機艙',
+        icon: 'fa-plane',
+        iconBg: 'bg-sky-100 text-sky-600',
+        img: 'https://i.postimg.cc/J7xL03XN/553380736-17923983366113862-4330461556047026475-n.jpg', 
+        color: 'from-sky-500 to-blue-600',
+        description: '歡迎乘坐太古航空！請將食物進行分類，分辨旅途中空姐提供的哪些是「健康食物」，哪些是「無益食物」！這關需要先輸入現場通關密碼解鎖食物分類遊戲！',
+        unlockType: 'game_food_new', // 密碼解鎖小遊戲
+        correctPassword: '1100',
+        hint: '向現場老師索取密碼以解鎖食物分類遊戲。遊戲獲得 5 分滿分即可完成通關。',
+        completed: false
+      },
+      {
+        id: 8,
+        floor: '2f',
+        floorLabel: '二樓任務',
+        title: '任務８：暑期自學計劃—海洋保育',
+        location: '二樓海洋保育展覽', 
+        icon: 'fa-fish-fins',
+        iconBg: 'bg-blue-100 text-blue-600',
+        img: 'https://i.postimg.cc/W4qNJDV5/w-11.jpg', 
+        color: 'from-blue-500 to-cyan-500',
+        description: '二樓暑期自學計劃—海洋保育大探秘！細心閱讀二樓海洋保育閣中的精彩展覽，與家長一起回答兩個關於海洋保育問題，愛護藍色大自然！', 
+        unlockType: 'quiz_ocean',
+        correctPassword: '62T',
+        hint: '在下方答對全部 2 題海洋保育選擇題即可直接解鎖通關。',
+        completed: false
+      },
+      {
+        id: 9,
+        floor: '3f',
+        floorLabel: '三樓任務',
+        title: '任務９：英文室 AI 海洋生物繪圖',
+        location: '三樓英文室',
+        icon: 'fa-pencil-ruler',
+        iconBg: 'bg-pink-100 text-pink-600',
+        img: 'https://i.postimg.cc/2SF3SLzm/whatsapp-image-2024-09-26-at-3-30-55-pm-(1).jpg', 
+        color: 'from-pink-500 to-rose-500',
+        description: '在英文室中觀察海洋生物單字框 (Shark 🦈, Dolphin 🐬, Turtle 🐢, Octopus 🐙, Starfish ⭐), 選擇一種並在 iPad 畫布上畫出來。AI 將會即時猜出你畫的是哪種生物！',
+        unlockType: 'password', // 已由 english_drawing 改為純密碼驗證通關
+        correctPassword: '2856',
+        hint: '在英文室完成 AI 繪圖體驗後，向英文科老師索取 4 位數字密碼。',
+        completed: false
+      },
+      {
+        id: 10,
+        floor: '3f',
+        floorLabel: '三樓任務',
+        title: '任務１０：National Geographic 香港海洋生物', // 已完美更名為「香港海洋生物」
+        location: '三樓 National Geographic 國家地理雜誌海洋教育互動廊', 
+        icon: 'fa-earth-asia',
+        iconBg: 'bg-yellow-100 text-yellow-600',
+        img: 'https://i.postimg.cc/XY7J9sxw/Nat-Geo-zou-lang.jpg', 
+        color: 'from-yellow-500 to-amber-600',
+        description: '香港海洋生命大尋寶！探索在香港周邊生活的小動物們，並在絢麗的壁畫中尋找答案！', 
+        unlockType: 'quiz_national_geographic',
+        correctPassword: '103y',
+        hint: '在三樓國家地理走廊前尋找答案，選對正確選項即可通關。',
+        completed: false
+      },
+      {
+        id: 11,
+        floor: '4f',
+        floorLabel: '四樓任務',
+        title: '任務１１：科學室 STEAM 探索',
+        location: '四樓科學室',
+        icon: 'fa-flask',
+        iconBg: 'bg-cyan-100 text-cyan-600',
+        img: 'https://i.postimg.cc/Dy5ffqF0/4f-sciencerm.jpg', 
+        color: 'from-cyan-500 to-teal-500',
+        description: '走進充滿未來感的科學室！觀察STEAM比賽 作品 及展板，回答以下兩個問題。', 
+        unlockType: 'quiz_science',
+        correctPassword: 'AB',
+        hint: '觀察展板後，選取正確選項即可直接解鎖！',
+        completed: false
+      },
+      {
+        id: 12,
+        floor: '4f',
+        floorLabel: '四樓任務',
+        title: '任務１２：AI 數學角「數字形狀變變變」',
+        location: '四樓 AI 數學角',
+        icon: 'fa-shapes',
+        iconBg: 'bg-amber-100 text-amber-600',
+        img: 'https://i.postimg.cc/Vvm1mNV6/whatsapp-image-2024-09-16-at-2-03-46-pm-2.jpg', 
+        color: 'from-amber-500 to-yellow-500',
+        description: '小太想利用圖形畫一幅漂亮的畫送給妹妹但不慢意。請小朋友在 iPad 上利用 AutoDraw 神奇畫筆功能：\n1. 畫出三個圓形，觀察 AI 自動幫你美化成了甚麼？（如雪人、毛毛蟲）。\n2. 自由畫出 2 種不同形狀，寫下一共用了多少圖形並自由著色！',
+        unlockType: 'password', // 已由 math_autodraw 改為純密碼驗證通關
+        correctPassword: '30class',
+        hint: '體驗形狀變變變後，向在場老師查詢並輸入數學角展板的密碼。',
+        completed: false
+      },
+      {
+        id: 13,
+        floor: '1f',
+        floorLabel: '一樓及梯間',
+        title: '任務１３：Taikoo Star 性格強項',
+        location: '二樓梯間 & 地下升降機旁邊',
+        icon: 'fa-circle-check',
+        iconBg: 'bg-purple-100 text-purple-600',
+        img: 'https://i.postimg.cc/C1fd82FX/Whats-App-Image-2026-06-28-at-5-12-49-PM-(1).jpg', 
+        color: 'from-purple-500 to-violet-600',
+        description: '走到二樓梯間及地下升降機旁邊，細心閱讀Taikoo Star的性格強項海報，回答洪熙樂與陳顥月兩位同學的性格強項是甚麼。探尋正向教育的奧秘！', 
+        unlockType: 'quiz_taikoo_star_new',
+        correctPassword: 'CC',
+        hint: '在指定海報前尋找答案，選對正確選項即可通關。',
+        completed: false
+      }
+    ];
+
+    let currentFilter = 'all';
+    let m7Unlocked = false; // 用於跟踪任務 7 的密碼解鎖狀態 (每會話獨立)
+    let sciAns1 = '';
+    let sciAns2 = '';
+    let starNewAns1 = '';
+    let starNewAns2 = '';
+    let congratsInterval = null; // 用於通關後持續五彩紙花的計時器
+
+    // ==========================================
+    // 解決行內 HTML 屬性轉義引號衝突的全局 onerror 輔助函數
+    // ==========================================
+    function handleImageError(img, icon, iconBg) {
+      img.onerror = null; // 防止無限循環
+      const parent = img.parentElement;
+      if (parent) {
+        parent.innerHTML = `
+          <div class="w-24 h-24 rounded-full ${iconBg} flex items-center justify-center text-2xl shrink-0 shadow-inner">
+            <i class="fa-solid ${icon}"></i>
+          </div>
+        `;
+      }
+    }
+
+    function handleModalImageError(img, icon, iconBg) {
+      img.onerror = null; // 防止無限循環
+      const parent = img.parentElement;
+      if (parent) {
+        parent.className = `w-32 h-32 rounded-full ${iconBg} flex items-center justify-center text-4xl shrink-0 shadow-inner`;
+        parent.innerHTML = `<i class="fa-solid ${icon}"></i>`;
+      }
+    }
+
+    // 儲存進度
+    function saveProgress() {
+      const progressData = missions.map(m => ({ id: m.id, completed: m.completed }));
+      localStorage.setItem('taikoo_ai_progress_2026_v5', JSON.stringify(progressData));
+    }
+
+    // 載入進度
+    function loadProgress() {
+      const saved = localStorage.getItem('taikoo_ai_progress_2026_v5');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          parsed.forEach(item => {
+            const mission = missions.find(m => m.id === item.id);
+            if (mission) mission.completed = item.completed;
+          });
+        } catch(e) {
+          console.error("讀取存檔失敗：", e);
+        }
+      }
+    }
+
+    // 更新通關進度
+    function updateGlobalProgress() {
+      const completedCount = missions.filter(m => m.completed).length;
+      const progressEl = document.getElementById('global-progress');
+      if (progressEl) {
+        progressEl.innerText = `${completedCount} / ${missions.length}`;
+      }
+      
+      // 當順利完成 13 關後，自動跳出全通關賀喜視窗，不涉及任何證書下載！
+      if (completedCount === missions.length) {
+        openCongratsModal();
+      }
+    }
+
+    // 渲染卡片
+    function renderMissions() {
+      const container = document.getElementById('missions-grid');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const filtered = currentFilter === 'all' 
+        ? missions 
+        : missions.filter(m => {
+            if (currentFilter === 'gf') return m.floor === 'gf';
+            if (currentFilter === '1f') return m.floor === '1f';
+            if (currentFilter === 'upper') return ['2f', '3f', '4f'].includes(m.floor);
+            return true;
+          });
+
+      filtered.forEach(m => {
+        const card = document.createElement('div');
+        // 如果通關，卡片邊框變鮮黃色（Sharp Yellow），背景帶有暖黃色
+        const borderBgStyle = m.completed 
+          ? 'border-yellow-400 bg-yellow-50/40 ring-4 ring-yellow-400/30' 
+          : 'border-slate-100 bg-white';
+        
+        card.className = `rounded-3xl p-5 shadow-sm border ${borderBgStyle} hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer flex flex-col justify-between relative overflow-hidden`;
+        card.setAttribute('onclick', `openMissionModal(${m.id})`);
+
+        // 通關改為鮮黃色（Sharp Yellow）並顯示獎盃 icon
+        const statusBadge = m.completed 
+          ? `<span class="bg-yellow-400 text-slate-900 text-xs font-black px-3.5 py-1.5 rounded-full flex items-center space-x-1.5 shadow-md border-2 border-yellow-500 animate-pulse"><i class="fa-solid fa-trophy text-amber-700"></i> <span>已通關</span></span>`
+          : `<span class="bg-slate-100 text-slate-500 text-xs font-bold px-3 py-1 rounded-full flex items-center space-x-1"><i class="fa-solid fa-lock"></i> <span>未解鎖</span></span>`;
+
+        // 判斷是否顯示圓形實景圖片 (放大至 w-24 h-24)，並設定優雅的 Fallback 機制，調用全局函數避免嵌套引號出錯
+        const mediaHtml = m.img 
+          ? `<img src="${m.img}" alt="${m.title}" class="w-24 h-24 rounded-full object-cover shrink-0 shadow-md border-2 border-taikoo-blue/20" onerror="handleImageError(this, '${m.icon}', '${m.iconBg}')">`
+          : `<div class="w-24 h-24 rounded-full ${m.iconBg} flex items-center justify-center text-2xl shrink-0 shadow-inner">
+              <i class="fa-solid ${m.icon}"></i>
+             </div>`;
+
+        card.innerHTML = `
+          <div>
+            <div class="flex justify-between items-start mb-4">
+              <span class="text-xs font-bold px-2.5 py-1 rounded-full bg-slate-100 text-slate-600">${m.floorLabel}</span>
+              ${statusBadge}
+            </div>
+            
+            <div class="flex items-start space-x-4 mb-3">
+              <div class="flex shrink-0">
+                ${mediaHtml}
+              </div>
+              <div class="flex-1">
+                <h4 class="font-black text-slate-800 text-sm md:text-base leading-snug">${m.title}</h4>
+                <p class="text-xs text-slate-400 mt-0.5"><i class="fa-solid fa-map-marker-alt"></i> ${m.location}</p>
+              </div>
+            </div>
+
+            <p class="text-xs text-slate-500 line-clamp-2 leading-relaxed mb-4">
+              ${m.description}
+            </p>
+          </div>
+
+          <div class="border-t border-slate-100/80 pt-3 flex items-center justify-between text-xs font-bold mt-auto">
+            <span class="text-taikoo-blue hover:underline">
+              ${m.completed ? '查看詳情 <i class="fa-solid fa-arrow-right ml-0.5"></i>' : '進入挑戰任務 <i class="fa-solid fa-arrow-right ml-0.5"></i>'}
+            </span>
+            ${m.completed ? '<i class="fa-solid fa-award text-taikoo-yellow text-xl"></i>' : ''}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function filterFloor(floor) {
+      currentFilter = floor;
+      document.querySelectorAll('.floor-tab').forEach(tab => {
+        tab.classList.remove('bg-taikoo-green', 'text-white', 'shadow-md', 'shadow-emerald-100');
+        tab.classList.add('bg-white', 'text-slate-600');
+      });
+
+      const activeTab = document.getElementById(`tab-${floor}`);
+      if (activeTab) {
+        activeTab.classList.remove('bg-white', 'text-slate-600');
+        activeTab.classList.add('bg-taikoo-green', 'text-white', 'shadow-md', 'shadow-emerald-100');
+      }
+
+      renderMissions();
+    }
+
+    let activeMissionId = null;
+    function openMissionModal(id) {
+      const m = missions.find(x => x.id === id);
+      if (!m) return;
+      activeMissionId = id;
+
+      document.getElementById('modal-header').className = `p-6 text-white bg-gradient-to-r ${m.color} flex justify-between items-start`;
+      document.getElementById('modal-badge-floor').innerText = m.floorLabel;
+      document.getElementById('modal-title').innerText = m.title;
+      document.getElementById('modal-location').innerText = m.location;
+      document.getElementById('modal-description').innerText = m.description;
+
+      // 在 Modal 內更換為超大尺寸的圓形實景圖 (w-32 h-32)，調用全局 handleModalImageError 函數防錯
+      const modalIconContainer = document.getElementById('modal-icon-container');
+      if (m.img) {
+        modalIconContainer.className = "w-32 h-32 rounded-full overflow-hidden shrink-0 shadow-md border-2 border-white";
+        modalIconContainer.innerHTML = `<img src="${m.img}" alt="${m.title}" class="w-full h-full object-cover" onerror="handleModalImageError(this, '${m.icon}', '${m.iconBg}')">`;
+      } else {
+        modalIconContainer.className = `w-32 h-32 rounded-full ${m.iconBg} flex items-center justify-center text-4xl shrink-0 shadow-inner`;
+        modalIconContainer.innerHTML = `<i class="fa-solid ${m.icon}"></i>`;
+      }
+
+      const statusPill = document.getElementById('modal-status-pill');
+      if (m.completed) {
+        statusPill.className = 'text-xs font-bold px-3 py-1.5 rounded-full bg-yellow-400 text-slate-900 border border-yellow-500';
+        statusPill.innerHTML = '<i class="fa-solid fa-trophy mr-1"></i> 已通關完成';
+      } else {
+        statusPill.className = 'text-xs font-bold px-3 py-1.5 rounded-full bg-amber-100 text-amber-800';
+        statusPill.innerHTML = '<i class="fa-solid fa-clock mr-1"></i> 進行中';
+      }
+
+      renderInteractiveArea(m);
+      document.getElementById('mission-modal').classList.remove('hidden');
+    }
+
+    function closeMissionModal() {
+      document.getElementById('mission-modal').classList.add('hidden');
+      activeMissionId = null;
+    }
+
+    // 🗺️ 地圖模態框控制函數
+    function openMapModal() {
+      const mapModal = document.getElementById('map-modal');
+      if (mapModal) mapModal.classList.remove('hidden');
+    }
+
+    function closeMapModal() {
+      const mapModal = document.getElementById('map-modal');
+      if (mapModal) mapModal.classList.add('hidden');
+    }
+
+    // 🏆 全通關大賀喜模態框控制函數
+    function openCongratsModal() {
+      const congratsModal = document.getElementById('congrats-modal');
+      if (congratsModal) {
+        congratsModal.classList.remove('hidden');
+        triggerContinuousConfetti();
+      }
+    }
+
+    function closeCongratsModal() {
+      const congratsModal = document.getElementById('congrats-modal');
+      if (congratsModal) {
+        congratsModal.classList.add('hidden');
+      }
+      if (congratsInterval) {
+        clearInterval(congratsInterval);
+        congratsInterval = null;
+      }
+    }
+
+    // 通關後連續燃放五彩爆花 5 秒
+    function triggerContinuousConfetti() {
+      triggerConfetti();
+      if (congratsInterval) clearInterval(congratsInterval);
+      congratsInterval = setInterval(() => {
+        confetti({ particleCount: 30, spread: 60, origin: { y: 0.7 } });
+      }, 1000);
+      setTimeout(() => {
+        if (congratsInterval) {
+          clearInterval(congratsInterval);
+          congratsInterval = null;
+        }
+      }, 5000);
+    }
+
+    // 動態交互區域渲染 (已完美移除了 AI 卡通相框、手寫、故事、AutoDraw 畫布)
+    function renderInteractiveArea(m) {
+      const container = document.getElementById('modal-interactive-area');
+      if (!container) return;
+      container.innerHTML = '';
+
+      if (m.completed) {
+        container.innerHTML = `
+          <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 text-center">
+            <div class="text-4xl mb-2">🎉</div>
+            <h5 class="font-bold text-emerald-800">你已獲得此關卡的探索徽章！</h5>
+            <p class="text-xs text-emerald-600 mt-1">太古小學謝謝你的參與，繼續挑戰其他有趣的AI任務吧！</p>
+          </div>
+        `;
+        return;
+      }
+
+      switch (m.unlockType) {
+        case 'password':
+          container.innerHTML = `
+            <div class="space-y-2">
+              <label class="block text-xs font-bold text-slate-500 uppercase"><i class="fa-solid fa-key mr-1"></i> 請輸入通關密碼</label>
+              <div class="flex gap-2">
+                <input type="text" id="mission-pwd-input" placeholder="請輸入現場老師提供的密碼" class="flex-1 px-4 py-2.5 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500 font-bold" />
+                <button onclick="verifyPassword(${m.id})" class="px-5 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl transition">
+                  驗證通關
+                </button>
+              </div>
+              <p class="text-xs text-amber-600"><i class="fa-solid fa-circle-question mr-0.5"></i> ${m.hint}</p>
+            </div>
+          `;
+          break;
+
+        case 'game_cycle_new': // 任務二：卡路里+單車密碼雙重驗證 (答案已修正為 253 kcal)
+          container.innerHTML = `
+            <div class="bg-orange-50 border border-orange-100 rounded-2xl p-4 space-y-3">
+              <h5 class="font-bold text-orange-800 text-sm"><i class="fa-solid fa-clipboard-question mr-1"></i> 「太」輕Zone 雙重挑戰驗證</h5>
+              
+              <div class="space-y-1">
+                <label class="block text-base md:text-lg font-black text-slate-800 leading-relaxed py-1">1. 請輸入從小食部壁報找到的「5粒燒賣卡路里」 (kcal)</label>
+                <input type="number" id="m2-calorie-input" placeholder="請輸入數值" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-500 font-bold text-base md:text-lg" />
+              </div>
+
+              <div class="space-y-1">
+                <label class="block text-base md:text-lg font-black text-slate-800 leading-relaxed py-1">2. 請輸入現場單車通關密碼</label>
+                <input type="text" id="m2-bike-pwd" placeholder="請輸入 4 位數字密碼" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-500 font-bold text-base md:text-lg" />
+              </div>
+
+              <button onclick="verifyMission2()" class="w-full py-3 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl text-base md:text-lg transition shadow-md">
+                驗證通關
+              </button>
+            </div>
+          `;
+          break;
+
+        case 'quiz_m6': // 任務六：太古之星 (問題及選項均放大)
+          container.innerHTML = `
+            <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-4 space-y-3 text-center">
+              <h5 class="font-bold text-indigo-800 text-sm text-left"><i class="fa-solid fa-magnifying-glass-chart mr-1"></i> Star Wall 海報探索問答</h5>
+              
+              <p class="text-xl md:text-2xl font-black text-slate-900 leading-snug py-3">
+                游日翔同學的主項運動是甚麼？
+              </p>
+              
+              <div class="space-y-2.5 text-left">
+                <button onclick="submitQuizAnswer(6, 'A')" class="w-full p-4 bg-white hover:bg-indigo-100 border border-slate-200 hover:border-indigo-300 rounded-xl text-base md:text-lg font-black transition flex justify-between items-center shadow-sm">
+                  <span>A. 足球</span>
+                  <i class="fa-solid fa-chevron-right text-slate-400"></i>
+                </button>
+                <button onclick="submitQuizAnswer(6, 'B')" class="w-full p-4 bg-white hover:bg-indigo-100 border border-slate-200 hover:border-indigo-300 rounded-xl text-base md:text-lg font-black transition flex justify-between items-center shadow-sm">
+                  <span>B. 越野跑</span>
+                  <i class="fa-solid fa-chevron-right text-slate-400"></i>
+                </button>
+                <button onclick="submitQuizAnswer(6, 'C')" class="w-full p-4 bg-white hover:bg-indigo-100 border border-slate-200 hover:border-indigo-300 rounded-xl text-base md:text-lg font-black transition flex justify-between items-center shadow-sm">
+                  <span>C. 籃球</span>
+                  <i class="fa-solid fa-chevron-right text-slate-400"></i>
+                </button>
+              </div>
+            </div>
+          `;
+          break;
+
+        case 'game_food_new': // 任務七：密碼驗證解鎖小遊戲
+          if (!m7Unlocked) {
+            container.innerHTML = `
+              <div class="bg-sky-50 border border-sky-100 rounded-2xl p-4 space-y-3 text-left">
+                <h5 class="font-bold text-sky-800 text-sm"><i class="fa-solid fa-lock mr-1"></i> 解鎖「太古機艙」食物分類遊戲</h5>
+                <p class="text-xs text-sky-700 leading-relaxed">請先輸入現場老師提供的密碼，解鎖機艙內的智能食物大分類小遊戲！</p>
+                <div class="space-y-1">
+                  <label class="block text-xs font-bold text-slate-600">請輸入解鎖密碼</label>
+                  <div class="flex gap-2">
+                    <input type="text" id="m7-unlock-pwd" placeholder="請輸入 4 位解鎖密碼" class="flex-1 px-3 py-2 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-sky-500 font-bold text-sm" />
+                    <button onclick="unlockM7Game()" class="px-5 py-2 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl text-xs transition">
+                      解鎖遊戲
+                    </button>
+                  </div>
+                </div>
+              </div>
+            `;
+          } else {
+            // 第二階段：食物大分類 (5 個不重複食物，答對 5 分通關)
+            container.innerHTML = `
+              <div class="bg-sky-50 border border-sky-100 rounded-2xl p-4 text-center space-y-3">
+                <h5 class="font-bold text-sky-800 text-sm"><i class="fa-solid fa-apple-whole mr-1"></i> 太古健康機艙食物大分類</h5>
+                <p class="text-base font-bold text-sky-900 leading-relaxed">分類健康食物與無益食物，答對 5 分即可直接通關徽章！</p>
+                
+                <div id="food-card" class="bg-white p-4 rounded-xl shadow-md border border-slate-100 inline-block min-w-[120px] transform transition">
+                  <span id="food-emoji" class="text-4xl block mb-1">🍎</span>
+                  <span id="food-name" class="text-xs font-bold text-slate-700">蘋果</span>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 mt-2">
+                  <button onclick="classifyFoodNew('healthy')" class="p-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl text-sm transition flex flex-col items-center justify-center">
+                    <span>💚 健康食物</span>
+                  </button>
+                  <button onclick="classifyFoodNew('unhealthy')" class="p-3 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl text-sm transition flex flex-col items-center justify-center">
+                    <span>⚠️ 無益食物</span>
+                  </button>
+                </div>
+                <p class="text-base font-bold text-slate-500">得分: <span id="food-score" class="text-sky-600 text-lg">0</span> / 5</p>
+              </div>
+            `;
+            setTimeout(startFoodGame, 50); // 自動重載
+          }
+          break;
+
+        case 'quiz_ocean': // 任務 8 海洋保育問答 (問題及選項均放大)
+          container.innerHTML = `
+            <div class="bg-blue-50 border border-blue-100 rounded-2xl p-4 space-y-4 text-left">
+              <h5 class="font-bold text-blue-800 text-sm"><i class="fa-solid fa-circle-question mr-1"></i> 暑期自學計劃—海洋保育問答</h5>
+              
+              <div class="space-y-2">
+                <p class="text-xl md:text-2xl font-black text-slate-900 leading-relaxed py-1">問題 1：太古小學的學生，去了哪 2 個地方親親海洋小動物？（複選題，請勾選 2 個正確選項）</p>
+                <div class="grid grid-cols-1 gap-2">
+                  <label class="flex items-center space-x-3 bg-white p-4 rounded-xl border text-base md:text-lg font-bold cursor-pointer shadow-sm">
+                    <input type="checkbox" id="ocean-q1-a" class="rounded text-blue-600 w-5 h-5" />
+                    <span>A. 海星灣</span>
+                  </label>
+                  <label class="flex items-center space-x-3 bg-white p-4 rounded-xl border text-base md:text-lg font-bold cursor-pointer shadow-sm">
+                    <input type="checkbox" id="ocean-q1-b" class="rounded text-blue-600 w-5 h-5" />
+                    <span>B. 公園 / 郊野公園</span>
+                  </label>
+                  <label class="flex items-center space-x-3 bg-white p-4 rounded-xl border text-base md:text-lg font-bold cursor-pointer shadow-sm">
+                    <input type="checkbox" id="ocean-q1-c" class="rounded text-blue-600 w-5 h-5" />
+                    <span>C. 太古海洋科學研究所</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="space-y-2 border-t border-blue-100 pt-3">
+                <p class="text-xl md:text-2xl font-black text-slate-900 leading-relaxed py-1">問題 2：太古小學同學和家人在家裡製作什麼支持海洋保育？</p>
+                <div class="grid grid-cols-1 gap-2">
+                  <label class="flex items-center space-x-3 bg-white p-4 rounded-xl border text-base md:text-lg font-bold cursor-pointer shadow-sm">
+                    <input type="radio" name="ocean-q2" value="A" class="w-5 h-5" />
+                    <span>A. 玩具</span>
+                  </label>
+                  <label class="flex items-center space-x-3 bg-white p-4 rounded-xl border text-base md:text-lg font-bold cursor-pointer shadow-sm">
+                    <input type="radio" name="ocean-q2" value="B" class="w-5 h-5" />
+                    <span>B. 餸菜</span>
+                  </label>
+                  <label class="flex items-center space-x-3 bg-white p-4 rounded-xl border text-base md:text-lg font-bold cursor-pointer shadow-sm">
+                    <input type="radio" name="ocean-q2" value="C" class="w-5 h-5" />
+                    <span>C. 手工</span>
+                  </label>
+                </div>
+              </div>
+
+              <button onclick="submitOceanQuiz()" class="w-full py-3 bg-blue-500 hover:bg-blue-600 text-white font-black rounded-xl text-base md:text-lg shadow-md transition">
+                提交問答挑戰
+              </button>
+            </div>
+          `;
+          break;
+
+        case 'quiz_national_geographic': // 任務 10 國家地理問答 (問題及選項均放大)
+          container.innerHTML = `
+            <div class="bg-yellow-50 border border-yellow-100 rounded-2xl p-4 space-y-4 text-left">
+              <h5 class="font-bold text-yellow-800 text-sm"><i class="fa-solid fa-circle-question mr-1"></i> National Geographic 國家地理尋寶問答</h5>
+              
+              <div class="space-y-2">
+                <p class="text-xl md:text-2xl font-black text-slate-900 leading-relaxed py-1">問題：根據三樓 National Geographic 壁畫，香港水域常看見哪種粉紅色的珍貴海洋哺乳類動物？</p>
+                <div class="grid grid-cols-1 gap-2.5">
+                  <button onclick="submitNatGeoAnswer('A')" class="p-4 bg-white border border-yellow-200 rounded-xl text-base md:text-lg font-black transition flex justify-between items-center shadow-sm">
+                    <span>A. 中華白海豚</span>
+                    <i class="fa-solid fa-chevron-right text-slate-400"></i>
+                  </button>
+                  <button onclick="submitNatGeoAnswer('B')" class="p-4 bg-white border border-yellow-200 rounded-xl text-base md:text-lg font-black transition flex justify-between items-center shadow-sm">
+                    <span>B. 藍鯨</span>
+                    <i class="fa-solid fa-chevron-right text-slate-400"></i>
+                  </button>
+                  <button onclick="submitNatGeoAnswer('C')" class="p-4 bg-white border border-yellow-200 rounded-xl text-base md:text-lg font-black transition flex justify-between items-center shadow-sm">
+                    <span>C. 馬蹄蟹</span>
+                    <i class="fa-solid fa-chevron-right text-slate-400"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+          break;
+
+        case 'quiz_science': // 任務 11 科學室問答 (問題及選項均放大，移除 AI 科學助教)
+          container.innerHTML = `
+            <div class="bg-cyan-50 border border-cyan-100 rounded-2xl p-4 space-y-4 text-left">
+              <h5 class="font-bold text-cyan-800 text-sm"><i class="fa-solid fa-flask mr-1"></i> 科學室 STEAM 探索問答</h5>
+              
+              <div class="space-y-2">
+                <p class="text-xl md:text-2xl font-black text-slate-900 leading-relaxed py-1">1. 太古小學六年級的跨學科STEAM活動作品是甚麼？</p>
+                <div class="grid grid-cols-1 gap-2">
+                  <button onclick="selectSciQ(1, 'A', this)" class="sci-btn-1 p-4 bg-white border border-cyan-200 rounded-xl text-base md:text-lg font-bold hover:bg-cyan-100 transition text-left shadow-sm">A. 土壤濕度感應裝置</button>
+                  <button onclick="selectSciQ(1, 'B', this)" class="sci-btn-1 p-4 bg-white border border-cyan-200 rounded-xl text-base md:text-lg font-bold hover:bg-cyan-100 transition text-left shadow-sm">B. 機械人</button>
+                  <button onclick="selectSciQ(1, 'C', this)" class="sci-btn-1 p-4 bg-white border border-cyan-200 rounded-xl text-base md:text-lg font-bold hover:bg-cyan-100 transition text-left shadow-sm">C. 保溫瓶</button>
+                </div>
+              </div>
+
+              <div class="space-y-2 border-t border-cyan-100 pt-3">
+                <p class="text-xl md:text-2xl font-black text-slate-900 leading-relaxed py-1">2. 太古小學電腦科會於三、四年級運用 AI工具 製作甚麼？（提示：留意展板）</p>
+                <div class="grid grid-cols-1 gap-2">
+                  <button onclick="selectSciQ(2, 'A', this)" class="sci-btn-2 p-4 bg-white border border-cyan-200 rounded-xl text-base md:text-lg font-bold hover:bg-cyan-100 transition text-left shadow-sm">A. 手機程式</button>
+                  <button onclick="selectSciQ(2, 'B', this)" class="sci-btn-2 p-4 bg-white border border-cyan-200 rounded-xl text-base md:text-lg font-bold hover:bg-cyan-100 transition text-left shadow-sm">B. 匯報工具</button>
+                  <button onclick="selectSciQ(2, 'C', this)" class="sci-btn-2 p-4 bg-white border border-cyan-200 rounded-xl text-base md:text-lg font-bold hover:bg-cyan-100 transition text-left shadow-sm">C. 漫畫</button>
+                </div>
+              </div>
+
+              <button onclick="submitSciQuiz()" class="w-full py-3 bg-cyan-500 hover:bg-cyan-600 text-white font-black rounded-xl text-base md:text-lg shadow-md transition">
+                提交答案
+              </button>
+            </div>
+          `;
+          break;
+
+        case 'quiz_taikoo_star_new': // 任務 13：Taikoo Star 性格強項 (問題與選項按鈕放大)
+          container.innerHTML = `
+            <div class="bg-purple-50 border border-purple-100 rounded-2xl p-4 space-y-4 text-left">
+              <h5 class="font-bold text-purple-800 text-sm"><i class="fa-solid fa-circle-question mr-1"></i> Taikoo Star 性格強項大探秘</h5>
+              
+              <div class="space-y-2">
+                <p class="text-xl md:text-2xl font-black text-slate-900 leading-relaxed py-1">1. 3A班洪熙樂同學的性格強項是甚麼？（提示：2/F梯間）</p>
+                <div class="grid grid-cols-1 gap-2">
+                  <button onclick="selectStarQNew(1, 'A', this)" class="q-star-btn-1 p-4 bg-white border border-purple-200 rounded-xl text-base md:text-lg font-bold hover:bg-purple-100 transition text-left shadow-sm">A. 愛</button>
+                  <button onclick="selectStarQNew(1, 'B', this)" class="q-star-btn-1 p-4 bg-white border border-purple-200 rounded-xl text-base md:text-lg font-bold hover:bg-purple-100 transition text-left shadow-sm">B. 創造力</button>
+                  <button onclick="selectStarQNew(1, 'C', this)" class="q-star-btn-1 p-4 bg-white border border-purple-200 rounded-xl text-base md:text-lg font-bold hover:bg-purple-100 transition text-left shadow-sm">C. 熱情與幹勁</button>
+                </div>
+              </div>
+
+              <div class="space-y-2 border-t border-purple-100 pt-3">
+                <p class="text-xl md:text-2xl font-black text-slate-900 leading-relaxed py-1">2. 4B班陳顥月同學的性格強項是甚麼？（提示：G/F升降機旁邊）</p>
+                <div class="grid grid-cols-1 gap-2">
+                  <button onclick="selectStarQNew(2, 'A', this)" class="q-star-btn-2 p-4 bg-white border border-purple-200 rounded-xl text-base md:text-lg font-bold hover:bg-purple-100 transition text-left shadow-sm">A. 勤奮</button>
+                  <button onclick="selectStarQNew(2, 'B', this)" class="q-star-btn-2 p-4 bg-white border border-purple-200 rounded-xl text-base md:text-lg font-bold hover:bg-purple-100 transition text-left shadow-sm">B. 社交智慧</button>
+                  <button onclick="selectStarQNew(2, 'C', this)" class="q-star-btn-2 p-4 bg-white border border-purple-200 rounded-xl text-base md:text-lg font-bold hover:bg-purple-100 transition text-left shadow-sm">C. 細心</button>
+                </div>
+              </div>
+
+              <button onclick="submitStarQuizNew()" class="w-full py-3 bg-purple-500 hover:bg-purple-600 text-white font-black rounded-xl text-base md:text-lg shadow-md transition">
+                提交答案
+              </button>
+            </div>
+          `;
+          starNewAns1 = '';
+          starNewAns2 = '';
+          break;
+      }
+    }
+
+    // ==========================================
+    // 答題與小遊戲交互核心
+    // ==========================================
+
+    // 任務二驗證 (已將卡路里正確答案 300 修改為 253)
+    function verifyMission2() {
+      const calorieInput = document.getElementById('m2-calorie-input').value.trim();
+      const pwdInput = document.getElementById('m2-bike-pwd').value.trim().toUpperCase();
+      const m = missions.find(x => x.id === 2);
+
+      if (calorieInput === '253' && pwdInput === '2561') {
+        m.completed = true;
+        saveProgress();
+        showToast('🔓 恭喜！成功通過「太」輕Zone雙重考驗！', 'success');
+        updateGlobalProgress();
+        renderMissions();
+        renderInteractiveArea(m);
+        confetti({ particleCount: 70, spread: 50, origin: { y: 0.8 } });
+      } else {
+        showToast('❌ 燒賣卡路里或通關密碼不正確，請重新檢查！', 'error');
+      }
+    }
+
+    // 任務六驗證
+    function submitQuizAnswer(missionId, answer) {
+      const m = missions.find(x => x.id === missionId);
+      if (answer === 'A') {
+        m.completed = true;
+        saveProgress();
+        showToast('🎉 回答正確！游日翔同學的主項運動是足球！', 'success');
+        updateGlobalProgress();
+        renderMissions();
+        renderInteractiveArea(m);
+        confetti({ particleCount: 70, spread: 50, origin: { y: 0.8 } });
+      } else {
+        showToast('❌ 答案不正確，請在 Star Wall 榮譽牆前重新仔細觀察！', 'error');
+      }
+    }
+
+    // 任務七解鎖遊戲
+    function unlockM7Game() {
+      const pwdInput = document.getElementById('m7-unlock-pwd').value.trim();
+      if (pwdInput === '1100') {
+        m7Unlocked = true;
+        showToast('🔓 密碼正確！正在載入食物大分類遊戲...', 'success');
+        const m = missions.find(x => x.id === 7);
+        renderInteractiveArea(m);
+        startFoodGame();
+      } else {
+        showToast('❌ 密碼不正確，請詢問機艙服務員索取密碼！', 'error');
+      }
+    }
+
+    // 食物資料池 (任務 7 專用)
+    const foodPool = [
+      { name: '🍎 蘋果', type: 'healthy' },
+      { name: '🥦 西蘭花', type: 'healthy' },
+      { name: '🍌 香蕉', type: 'healthy' },
+      { name: '🥕 胡蘿蔔', type: 'healthy' },
+      { name: '🥛 牛奶', type: 'healthy' },
+      { name: '🍟 薯條', type: 'unhealthy' },
+      { name: '🍩 甜甜圈', type: 'unhealthy' },
+      { name: '🍕 披薩', type: 'unhealthy' },
+      { name: '🥤 汽水', type: 'unhealthy' },
+      { name: '🍬 糖果', type: 'unhealthy' }
+    ];
+    let m7ActiveFoods = [];
+    let m7CurrentFoodIndex = 0;
+    let foodScore = 0;
+
+    function startFoodGame() {
+      m7ActiveFoods = [...foodPool].sort(() => 0.5 - Math.random()).slice(0, 5);
+      m7CurrentFoodIndex = 0;
+      foodScore = 0;
+      nextFoodNew();
+    }
+
+    function nextFoodNew() {
+      if (m7CurrentFoodIndex < m7ActiveFoods.length) {
+        const food = m7ActiveFoods[m7CurrentFoodIndex];
+        const emojiEl = document.getElementById('food-emoji');
+        const nameEl = document.getElementById('food-name');
+        if (emojiEl && nameEl) {
+          const parts = food.name.split(' ');
+          emojiEl.innerText = parts[0];
+          nameEl.innerText = parts[1] || '';
+        }
+      }
+    }
+
+    function classifyFoodNew(category) {
+      if (foodScore >= 5) return;
+      const currentFood = m7ActiveFoods[m7CurrentFoodIndex];
+      
+      if (currentFood.type === category) {
+        foodScore++;
+        showToast('✔️ 分類正確！獲得 1 分', 'success');
+      } else {
+        showToast('❌ 答錯囉，這是無益食物，少食為妙！', 'error');
+      }
+
+      const scoreText = document.getElementById('food-score');
+      if (scoreText) scoreText.innerText = foodScore;
+
+      m7CurrentFoodIndex++;
+
+      if (foodScore === 5) {
+        setTimeout(() => {
+          const m = missions.find(x => x.id === 7);
+          m.completed = true;
+          saveProgress();
+          showToast('✈️ 成功獲得「太古機艙」探索徽章！', 'success');
+          updateGlobalProgress();
+          renderMissions();
+          renderInteractiveArea(m);
+          confetti({ particleCount: 80, spread: 50, origin: { y: 0.8 } });
+        }, 300);
+      } else if (m7CurrentFoodIndex >= 5) {
+        setTimeout(() => {
+          showToast('😢 必須獲得 5 分滿分才能通關喔！請重新挑戰！', 'error');
+          startFoodGame();
+          const card = document.getElementById('food-card');
+          if (card) {
+            card.classList.add('scale-75', 'opacity-0');
+            setTimeout(() => {
+              card.classList.remove('scale-75', 'opacity-0');
+            }, 150);
+          }
+        }, 500);
+      } else {
+        const card = document.getElementById('food-card');
+        if (card) {
+          card.classList.add('scale-75', 'opacity-0');
+          setTimeout(() => {
+            nextFoodNew();
+            card.classList.remove('scale-75', 'opacity-0');
+          }, 150);
+        }
+      }
+    }
+
+    // 任務 8 海洋保育驗證
+    function submitOceanQuiz() {
+      const m = missions.find(x => x.id === 8);
+      const q1a = document.getElementById('ocean-q1-a').checked;
+      const q1b = document.getElementById('ocean-q1-b').checked;
+      const q1c = document.getElementById('ocean-q1-c').checked;
+      const q2Radio = document.querySelector('input[name="ocean-q2"]:checked');
+      const q2Answer = q2Radio ? q2Radio.value : '';
+
+      const q1Correct = (q1a && q1c && !q1b);
+      const q2Correct = (q2Answer === 'B');
+
+      if (q1Correct && q2Correct) {
+        m.completed = true;
+        saveProgress();
+        showToast('🌊 海洋保育答題完全正確！你太棒了！', 'success');
+        updateGlobalProgress();
+        renderMissions();
+        renderInteractiveArea(m);
+        confetti({ particleCount: 70, spread: 50, origin: { y: 0.8 } });
+      } else {
+        showToast('❌ 答案有些不對喔。請在二樓海洋保育展覽中細心閱讀尋找答案！', 'error');
+      }
+    }
+
+    // 任務 10 國家地理驗證
+    function submitNatGeoAnswer(ans) {
+      const m = missions.find(x => x.id === 10);
+      if (ans === 'A') {
+        m.completed = true;
+        saveProgress();
+        showToast('🐳 回答正確！香港最珍稀的海洋好朋友就是「中華白海豚」！', 'success');
+        updateGlobalProgress();
+        renderMissions();
+        renderInteractiveArea(m);
+        confetti({ particleCount: 70, spread: 50, origin: { y: 0.8 } });
+      } else {
+        showToast('❌ 哎呀，不對喔。看看三樓國家地理互動廊美麗的壁畫再試試！', 'error');
+      }
+    }
+
+    // 任務 11 科學室答題追蹤變數
+    function selectSciQ(qNum, value, btn) {
+      if (qNum === 1) {
+        sciAns1 = value;
+        document.querySelectorAll('.sci-btn-1').forEach(b => b.classList.remove('bg-cyan-100', 'border-cyan-500'));
+      } else {
+        sciAns2 = value;
+        document.querySelectorAll('.sci-btn-2').forEach(b => b.classList.remove('bg-cyan-100', 'border-cyan-500'));
+      }
+      btn.classList.add('bg-cyan-100', 'border-cyan-500');
+    }
+
+    // 任務 11 答題提交
+    function submitSciQuiz() {
+      if (!sciAns1 || !sciAns2) {
+        showToast('請先選取答案喔！', 'info');
+        return;
+      }
+      const m = missions.find(x => x.id === 11);
+      if (sciAns1 === 'A' && sciAns2 === 'B') {
+        m.completed = true;
+        saveProgress();
+        showToast('🔬 答對了！太古小學的 STEAM 和 AI 電腦教育成果非常優異！', 'success');
+        updateGlobalProgress();
+        renderMissions();
+        renderInteractiveArea(m);
+        confetti({ particleCount: 70, spread: 50, origin: { y: 0.8 } });
+      } else {
+        showToast('❌ 有題目答錯了，請觀察科學室展板與枱面上的提示！', 'error');
+      }
+    }
+
+    // 任務 13 性格強項答題追蹤變數
+    function selectStarQNew(qNum, value, btn) {
+      if (qNum === 1) {
+        starNewAns1 = value;
+        document.querySelectorAll('.q-star-btn-1').forEach(b => b.classList.remove('bg-purple-100', 'border-purple-500'));
+      } else {
+        starNewAns2 = value;
+        document.querySelectorAll('.q-star-btn-2').forEach(b => b.classList.remove('bg-purple-100', 'border-purple-500'));
+      }
+      btn.classList.add('bg-purple-100', 'border-purple-500');
+    }
+
+    // 任務 13 性格強項驗證
+    function submitStarQuizNew() {
+      if (!starNewAns1 || !starNewAns2) {
+        showToast('請選好兩道題目喔！', 'info');
+        return;
+      }
+      const m = missions.find(x => x.id === 13);
+      if (starNewAns1 === 'C' && starNewAns2 === 'C') {
+        m.completed = true;
+        saveProgress();
+        showToast('🌟 回答完全正確！洪熙樂同學展現了熱情與幹勁，陳顥月同學則無比細心！', 'success');
+        updateGlobalProgress();
+        renderMissions();
+        renderInteractiveArea(m);
+        confetti({ particleCount: 75, spread: 55, origin: { y: 0.8 } });
+      } else {
+        showToast('❌ 性格強項答案有些不對。到二樓梯間與地下升降機旁尋找展板吧！', 'error');
+      }
+    }
+
+    // 驗證普通密碼關卡
+    function verifyPassword(missionId) {
+      const input = document.getElementById('mission-pwd-input');
+      if (!input) return;
+      const pwd = input.value.trim().toUpperCase();
+      const m = missions.find(x => x.id === missionId);
+      if (pwd === m.correctPassword.toUpperCase()) {
+        m.completed = true;
+        saveProgress();
+        showToast('🔓 通關成功！你獲得了一個探索徽章！', 'success');
+        updateGlobalProgress();
+        renderMissions();
+        renderInteractiveArea(m);
+        confetti({ particleCount: 60, spread: 40, origin: { y: 0.8 } });
+      } else {
+        showToast('❌ 密碼不正確，請再試一次或尋找關卡提示。', 'error');
+        input.classList.add('border-rose-400', 'animate-shake');
+        setTimeout(() => input.classList.remove('border-rose-400', 'animate-shake'), 1000);
+      }
+    }
+
+    function showToast(message, type = 'info') {
+      const toast = document.getElementById('custom-toast');
+      const icon = document.getElementById('toast-icon');
+      const msg = document.getElementById('toast-message');
+      msg.innerText = message;
+      if (type === 'success') {
+        icon.innerHTML = '✨';
+        toast.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 bg-emerald-600 text-white px-5 py-3 rounded-full shadow-2xl flex items-center space-x-2 z-50 transition-all opacity-100 scale-100 text-center';
+      } else if (type === 'error') {
+        icon.innerHTML = '❌';
+        toast.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 bg-rose-600 text-white px-5 py-3 rounded-full shadow-2xl flex items-center space-x-2 z-50 transition-all opacity-100 scale-100 text-center';
+      } else {
+        icon.innerHTML = '💡';
+        toast.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 bg-slate-800 text-white px-5 py-3 rounded-full shadow-2xl flex items-center space-x-2 z-50 transition-all opacity-100 scale-100 text-center';
+      }
+      setTimeout(() => {
+        toast.className = 'fixed top-20 left-1/2 transform -translate-x-1/2 bg-slate-900/90 text-white px-5 py-3 rounded-full shadow-2xl flex items-center space-x-2 z-50 transition-all opacity-0 scale-95 pointer-events-none';
+      }, 3500);
+    }
+
+    function triggerConfetti() {
+      const duration = 3 * 1000;
+      const end = Date.now() + duration;
+      (function frame() {
+        confetti({ particleCount: 5, angle: 60, spread: 55, origin: { x: 0 } });
+        confetti({ particleCount: 5, angle: 120, spread: 55, origin: { x: 1 } });
+        if (Date.now() < end) requestAnimationFrame(frame);
+      }());
+    }
+
+    // 遊戲開始按鈕觸發函數
+    function startGame() {
+      // 隱藏起跑畫面，顯示主遊戲面板
+      document.getElementById('splash-screen').classList.add('hidden');
+      document.getElementById('game-board').classList.remove('hidden');
+
+      // 瞬間並非同步載入進度與渲染卡片，確保萬無一失
+      loadProgress();
+      renderMissions();
+      updateGlobalProgress();
+
+      // 給予熱烈爆發的紙花慶祝效果！
+      triggerConfetti();
+    }
+  </script>
+</body>
+</html>
