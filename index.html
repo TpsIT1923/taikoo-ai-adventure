@@ -204,7 +204,7 @@
         </button>
       </div>
       <div class="p-6 overflow-y-auto bg-slate-100 flex-1 flex items-center justify-center">
-        <img src="https://i.postimg.cc/k5rbRkdH/Whats-App-Image-2026-07-10-at-3-12-03-PM.jpg" alt="太古小學 AI探索地圖" class="max-w-full max-h-[65vh] object-contain rounded-2xl shadow-xl border-4 border-white">
+        <img src="https://i.postimg.cc/mZXfZ4YW/Whats-App-Image-2026-07-10-at-3-23-54-PM.jpg" alt="太古小學 AI探索地圖" class="max-w-full max-h-[65vh] object-contain rounded-2xl shadow-xl border-4 border-white">
       </div>
       <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-end">
         <button onclick="closeMapModal()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl transition text-sm">
@@ -460,10 +460,10 @@
         iconBg: 'bg-yellow-100 text-yellow-600',
         img: 'https://i.postimg.cc/XY7J9sxw/Nat-Geo-zou-lang.jpg', 
         color: 'from-yellow-500 to-amber-600',
-        description: '香港海洋生命大尋寶！探索在香港周邊生活的小動物們，並在絢麗的壁畫中尋找答案！', 
+        description: '在三樓 National Geographic 國家地理雜誌海洋教育互動廊中細心閱讀展板，然後回答 5 題關於海洋生態的問題。答對至少 3 題即可成功通關！', 
         unlockType: 'quiz_national_geographic',
-        correctPassword: '103y',
-        hint: '在三樓國家地理走廊前尋找答案，選對正確選項即可通關。',
+        correctPassword: '3',
+        hint: '先閱讀三樓國家地理廊展板，答對其中 3 題英文選擇題即可直接解鎖通關！',
         completed: false
       },
       {
@@ -522,6 +522,7 @@
     let sciAns2 = '';
     let starNewAns1 = '';
     let starNewAns2 = '';
+    let natGeoAnswers = { q1: '', q2: '', q3: '', q4: '', q5: '' };
     let congratsInterval = null;
 
     // 食物資料池 (任務 7 專用)
@@ -663,6 +664,10 @@
       const m = missions.find(x => x.id === id);
       if (!m) return;
       activeMissionId = id;
+
+      if (id === 10) {
+        natGeoAnswers = { q1: '', q2: '', q3: '', q4: '', q5: '' };
+      }
 
       document.getElementById('modal-header').className = `p-6 text-white bg-gradient-to-r ${m.color} flex justify-between items-start`;
       document.getElementById('modal-badge-floor').innerText = m.floorLabel;
@@ -870,7 +875,7 @@
                 </div>
               </div>
               <div class="space-y-2 border-t border-blue-100 pt-3">
-                <p class="text-xl md:text-2xl font-black text-slate-900 leading-relaxed py-1">問題 2：太古小學同學和家人在家裡製作什麼支持海洋保育？</p>
+                <p class="text-xl md:text-2xl font-black text-slate-900 leading-relaxed py-1">問題 2：太古小學同學 and 家人在家裡製作什麼支持海洋保育？</p>
                 <div class="grid grid-cols-1 gap-2">
                   <label class="flex items-center space-x-3 bg-white p-4 rounded-xl border text-base md:text-lg font-bold cursor-pointer shadow-sm">
                     <input type="radio" name="ocean-q2" value="A" class="w-5 h-5" />
@@ -895,25 +900,73 @@
 
         case 'quiz_national_geographic':
           container.innerHTML = `
-            <div class="bg-yellow-50 border border-yellow-100 rounded-2xl p-4 space-y-4 text-left">
-              <h5 class="font-bold text-yellow-800 text-sm"><i class="fa-solid fa-circle-question mr-1"></i> National Geographic 國家地理尋寶問答</h5>
+            <div class="bg-yellow-50 border border-yellow-100 rounded-2xl p-4 space-y-6 text-left">
+              <div class="border-b border-yellow-200 pb-3">
+                <h5 class="font-bold text-yellow-800 text-sm flex items-center">
+                  <i class="fa-solid fa-fish-fins mr-1.5 animate-bounce"></i> 
+                  National Geographic 海洋生態挑戰大闖關
+                </h5>
+                <p class="text-xs text-yellow-700 mt-1">請仔細看三樓展板，在下方5題中答對至少 3 題即可通關！</p>
+              </div>
+
+              <!-- Q1 -->
               <div class="space-y-2">
-                <p class="text-xl md:text-2xl font-black text-slate-900 leading-relaxed py-1">問題：根據三樓 National Geographic 壁畫，香港水域常看見哪種粉紅色的珍貴海洋哺乳類動物？</p>
-                <div class="grid grid-cols-1 gap-2.5">
-                  <button onclick="submitNatGeoAnswer('A')" class="p-4 bg-white border border-yellow-200 rounded-xl text-base md:text-lg font-black transition flex justify-between items-center shadow-sm">
-                    <span>A. 中華白海豚</span>
-                    <i class="fa-solid fa-chevron-right text-slate-400"></i>
-                  </button>
-                  <button onclick="submitNatGeoAnswer('B')" class="p-4 bg-white border border-yellow-200 rounded-xl text-base md:text-lg font-black transition flex justify-between items-center shadow-sm">
-                    <span>B. 藍鯨</span>
-                    <i class="fa-solid fa-chevron-right text-slate-400"></i>
-                  </button>
-                  <button onclick="submitNatGeoAnswer('C')" class="p-4 bg-white border border-yellow-200 rounded-xl text-base md:text-lg font-black transition flex justify-between items-center shadow-sm">
-                    <span>C. 馬蹄蟹</span>
-                    <i class="fa-solid fa-chevron-right text-slate-400"></i>
-                  </button>
+                <p class="text-base font-black text-slate-900 leading-snug">Q1. Which animal can you find on SEAFOOD STREET?</p>
+                <div class="grid grid-cols-2 gap-2">
+                  <button onclick="selectNatGeoQ('1', 'A', this)" class="natgeo-btn-1 p-3 bg-white border border-yellow-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-yellow-50 transition text-left">A. Starfish</button>
+                  <button onclick="selectNatGeoQ('1', 'B', this)" class="natgeo-btn-1 p-3 bg-white border border-yellow-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-yellow-50 transition text-left">B. Squid</button>
+                  <button onclick="selectNatGeoQ('1', 'C', this)" class="natgeo-btn-1 p-3 bg-white border border-yellow-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-yellow-50 transition text-left">C. Turtle</button>
+                  <button onclick="selectNatGeoQ('1', 'D', this)" class="natgeo-btn-1 p-3 bg-white border border-yellow-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-yellow-50 transition text-left">D. Crab</button>
                 </div>
               </div>
+
+              <!-- Q2 -->
+              <div class="space-y-2 border-t border-yellow-200/50 pt-4">
+                <p class="text-base font-black text-slate-900 leading-snug">Q2. Which animal can you find in the MANGROVE PLAYGROUND?</p>
+                <div class="grid grid-cols-2 gap-2">
+                  <button onclick="selectNatGeoQ('2', 'A', this)" class="natgeo-btn-2 p-3 bg-white border border-yellow-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-yellow-50 transition text-left">A. Monkey</button>
+                  <button onclick="selectNatGeoQ('2', 'B', this)" class="natgeo-btn-2 p-3 bg-white border border-yellow-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-yellow-50 transition text-left">B. Crocodile</button>
+                  <button onclick="selectNatGeoQ('2', 'C', this)" class="natgeo-btn-2 p-3 bg-white border border-yellow-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-yellow-50 transition text-left">C. Frog</button>
+                  <button onclick="selectNatGeoQ('2', 'D', this)" class="natgeo-btn-2 p-3 bg-white border border-yellow-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-yellow-50 transition text-left">D. Snake</button>
+                </div>
+              </div>
+
+              <!-- Q3 -->
+              <div class="space-y-2 border-t border-yellow-200/50 pt-4">
+                <p class="text-base font-black text-slate-900 leading-snug">Q3. Which animal can you find in HONG KONG SEAS?</p>
+                <div class="grid grid-cols-2 gap-2">
+                  <button onclick="selectNatGeoQ('3', 'A', this)" class="natgeo-btn-3 p-3 bg-white border border-yellow-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-yellow-50 transition text-left">A. Whale</button>
+                  <button onclick="selectNatGeoQ('3', 'B', this)" class="natgeo-btn-3 p-3 bg-white border border-yellow-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-yellow-50 transition text-left">B. Butterfly Fish</button>
+                  <button onclick="selectNatGeoQ('3', 'C', this)" class="natgeo-btn-3 p-3 bg-white border border-yellow-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-yellow-50 transition text-left">C. Octopus</button>
+                  <button onclick="selectNatGeoQ('3', 'D', this)" class="natgeo-btn-3 p-3 bg-white border border-yellow-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-yellow-50 transition text-left">D. Jellyfish</button>
+                </div>
+              </div>
+
+              <!-- Q4 -->
+              <div class="space-y-2 border-t border-yellow-200/50 pt-4">
+                <p class="text-base font-black text-slate-900 leading-snug">Q4. Which animal can you find in HONG KONG SEAS?</p>
+                <div class="grid grid-cols-2 gap-2">
+                  <button onclick="selectNatGeoQ('4', 'A', this)" class="natgeo-btn-4 p-3 bg-white border border-yellow-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-yellow-50 transition text-left">A. Hippo</button>
+                  <button onclick="selectNatGeoQ('4', 'B', this)" class="natgeo-btn-4 p-3 bg-white border border-yellow-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-yellow-50 transition text-left">B. Pufferfish</button>
+                  <button onclick="selectNatGeoQ('4', 'C', this)" class="natgeo-btn-4 p-3 bg-white border border-yellow-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-yellow-50 transition text-left">C. Bamboo Shark</button>
+                  <button onclick="selectNatGeoQ('4', 'D', this)" class="natgeo-btn-4 p-3 bg-white border border-yellow-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-yellow-50 transition text-left">D. Elephant</button>
+                </div>
+              </div>
+
+              <!-- Q5 -->
+              <div class="space-y-2 border-t border-yellow-200/50 pt-4">
+                <p class="text-base font-black text-slate-900 leading-snug">Q5. Which animal can you find in HONG KONG SEAS?</p>
+                <div class="grid grid-cols-2 gap-2">
+                  <button onclick="selectNatGeoQ('5', 'A', this)" class="natgeo-btn-5 p-3 bg-white border border-yellow-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-yellow-50 transition text-left">A. Chinese White Dolphin</button>
+                  <button onclick="selectNatGeoQ('5', 'B', this)" class="natgeo-btn-5 p-3 bg-white border border-yellow-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-yellow-50 transition text-left">B. Seabird</button>
+                  <button onclick="selectNatGeoQ('5', 'C', this)" class="natgeo-btn-5 p-3 bg-white border border-yellow-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-yellow-50 transition text-left">C. Sea Turtle</button>
+                  <button onclick="selectNatGeoQ('5', 'D', this)" class="natgeo-btn-5 p-3 bg-white border border-yellow-200 rounded-xl text-sm font-bold text-slate-700 hover:bg-yellow-50 transition text-left">D. Seaweed</button>
+                </div>
+              </div>
+
+              <button onclick="submitNatGeoQuiz5()" class="w-full py-4 bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-900 font-black rounded-2xl shadow-md transition-all transform active:scale-95 text-base md:text-lg mt-4 border-b-4 border-amber-700">
+                提交問答挑戰 (Submit Answers)
+              </button>
             </div>
           `;
           break;
@@ -1122,18 +1175,40 @@
       }
     }
 
-    function submitNatGeoAnswer(ans) {
-      const m = missions.find(x => x.id === 10);
-      if (ans === 'A') {
+    function selectNatGeoQ(qNum, value, btn) {
+      natGeoAnswers['q' + qNum] = value;
+      document.querySelectorAll('.natgeo-btn-' + qNum).forEach(b => {
+        b.classList.remove('bg-yellow-100', 'border-yellow-500', 'ring-2', 'ring-yellow-400', 'text-amber-900');
+        b.classList.add('bg-white', 'border-yellow-200', 'text-slate-700');
+      });
+      btn.classList.remove('bg-white', 'border-yellow-200', 'text-slate-700');
+      btn.classList.add('bg-yellow-100', 'border-yellow-500', 'ring-2', 'ring-yellow-400', 'text-amber-900');
+    }
+
+    function submitNatGeoQuiz5() {
+      if (!natGeoAnswers.q1 || !natGeoAnswers.q2 || !natGeoAnswers.q3 || !natGeoAnswers.q4 || !natGeoAnswers.q5) {
+        showToast('💡 請先回答所有題目（Q1至Q5）喔！', 'info');
+        return;
+      }
+      
+      let score = 0;
+      if (natGeoAnswers.q1 === 'B') score++;
+      if (natGeoAnswers.q2 === 'B' || natGeoAnswers.q2 === 'D') score++;
+      if (natGeoAnswers.q3 === 'B') score++;
+      if (natGeoAnswers.q4 === 'C') score++;
+      if (natGeoAnswers.q5 === 'A' || natGeoAnswers.q5 === 'C') score++;
+
+      if (score >= 3) {
+        const m = missions.find(x => x.id === 10);
         m.completed = true;
         saveProgress();
-        showToast('🐳 回答正確！香港最珍稀的海洋好朋友就是「中華白海豚」！', 'success');
+        showToast(`🎉 答對了 ${score} 題！成功獲得 National Geographic 探索徽章！`, 'success');
         updateGlobalProgress();
         renderMissions();
         renderInteractiveArea(m);
-        confetti({ particleCount: 70, spread: 50, origin: { y: 0.8 } });
+        confetti({ particleCount: 75, spread: 55, origin: { y: 0.8 } });
       } else {
-        showToast('❌ 哎呀，不對喔。看看三樓國家地理互動廊美麗的壁畫再試試！', 'error');
+        showToast(`❌ 你答對了 ${score} 題，至少需要答對 3 題。請再仔細看看展廊展板！`, 'error');
       }
     }
 
