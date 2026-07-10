@@ -204,7 +204,7 @@
         </button>
       </div>
       <div class="p-6 overflow-y-auto bg-slate-100 flex-1 flex items-center justify-center">
-        <img src="https://i.postimg.cc/VkxRLbT3/Whats-App-Image-2026-07-08-at-7-20-17-PM.jpg" alt="太古小學 AI探索地圖" class="max-w-full max-h-[65vh] object-contain rounded-2xl shadow-xl border-4 border-white">
+        <img src="https://i.postimg.cc/k5rbRkdH/Whats-App-Image-2026-07-10-at-3-12-03-PM.jpg" alt="太古小學 AI探索地圖" class="max-w-full max-h-[65vh] object-contain rounded-2xl shadow-xl border-4 border-white">
       </div>
       <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-end">
         <button onclick="closeMapModal()" class="px-5 py-2.5 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold rounded-xl transition text-sm">
@@ -229,8 +229,14 @@
       <div class="bg-amber-50 rounded-2xl p-4 border border-amber-200">
         <p class="text-sm text-amber-900 font-bold leading-relaxed">
           親愛的小朋友和家長：<br>
-          太古小學全體教職員熱烈恭喜你們！你們發揮了無比的智慧與親子默契，圓滿完成了所有的 AI 與健康大挑戰，正式成為
+          太古小學全體教職員熱烈恭喜你們！你們發揮了無比的智慧與親子默契，圓滿完成了所有的 AI 任務大挑戰，正式成為
           <span class="text-taikoo-blue font-extrabold text-base">「太古 AI 探索小使者」</span>！🌟
+        </p>
+      </div>
+
+      <div class="bg-emerald-50 rounded-2xl p-4 border border-emerald-200 badge-bounce">
+        <p class="text-sm text-emerald-900 font-black leading-relaxed">
+          🎁 歡迎家長與小朋友到 5/F 禮堂外領取紀念品一份！
         </p>
       </div>
 
@@ -277,7 +283,7 @@
 
         <!-- 交互區域 -->
         <div id="modal-interactive-area" class="border-t border-slate-100 pt-4 space-y-4">
-          <!-- 動態注入內容 -->
+          <!-- 密碼輸入或選擇題 -->
         </div>
       </div>
 
@@ -291,14 +297,14 @@
     </div>
   </div>
 
-  <!-- 音效模擬 -->
+  <!-- 提示框 -->
   <div id="custom-toast" class="fixed top-20 left-1/2 transform -translate-x-1/2 bg-slate-900/90 text-white px-5 py-3 rounded-full shadow-2xl flex items-center space-x-2 z-50 transition-all opacity-0 pointer-events-none">
     <span id="toast-icon"></span>
     <span id="toast-message" class="text-sm font-bold"></span>
   </div>
 
   <script>
-    // 任務資料結構 (13 個任務)
+    // 任務資料結構 (13 個任務，完全移除了 Canvas 及 Gemini 相關探索，100% 靜態)
     const missions = [
       {
         id: 1,
@@ -327,7 +333,7 @@
         img: 'https://i.postimg.cc/wv9TT3SP/DSC05723.jpg',
         color: 'from-amber-500 to-orange-500',
         description: '1. 請先走到「小食部」壁報板，尋找並記下「5粒燒賣的卡路里資料」。\n2. 完成 500米計時賽，輸入現場單車通關密碼。這關需要同時完成卡路里問題及密碼輸入方可通關！',
-        unlockType: 'game_cycle_new', // 雙重驗證方式
+        unlockType: 'game_cycle_new',
         correctPassword: '2561',
         hint: '請在下方輸入 5 粒燒賣 of 卡路里以及單車通關密碼。',
         completed: false
@@ -359,7 +365,7 @@
         img: 'https://i.postimg.cc/7Zv4Zf74/DSC05728.jpg',
         color: 'from-blue-500 to-indigo-600',
         description: '親子合作抽出「健康律動動作圖卡」，做出指定動作並拍一張溫馨親子合照。在這裡可以體驗利用 AI (GEM) 將合照生成卡通相片下載！',
-        unlockType: 'password', // 已由 ai_photo 改為純密碼驗證通關
+        unlockType: 'password',
         correctPassword: '1923',
         hint: '體驗完成後，請向現場當值老師索取並輸入 4 位數字通關密碼。', 
         completed: false
@@ -375,7 +381,7 @@
         img: 'https://i.postimg.cc/0jLTjBzD/DSC05711-(1).jpg',
         color: 'from-teal-500 to-emerald-600',
         description: '尋寶隊在圖書館內遊走尋找指定的實體 Emoji 物件（書本 📖、時鐘 ⏰、椅子 🪑）。請用「忍者輕聲步伐」喔！',
-        unlockType: 'password', // 已改為純密碼驗證通關
+        unlockType: 'password',
         correctPassword: '5555',
         hint: '完成後請向圖書館當值老師索取幸運 4 位數字密碼通關。',
         completed: false
@@ -391,7 +397,7 @@
         img: 'https://i.postimg.cc/tT1n5Tz2/Whats-App-Image-2026-07-07-at-3-45-26-PM.jpg', 
         color: 'from-indigo-500 to-purple-600',
         description: '在 Star Wall 榮譽牆欣賞校友的 Taikoo Star 海報。並回答以下問題：游日翔同學的主項運動是甚麼？',
-        unlockType: 'quiz_m6', // 轉移到任務六
+        unlockType: 'quiz_m6',
         correctPassword: 'A',
         hint: '請在海報中尋找答案，選對正確選項即可通關。',
         completed: false
@@ -406,8 +412,8 @@
         iconBg: 'bg-sky-100 text-sky-600',
         img: 'https://i.postimg.cc/J7xL03XN/553380736-17923983366113862-4330461556047026475-n.jpg', 
         color: 'from-sky-500 to-blue-600',
-        description: '歡迎乘坐太古航空！請將食物進行分類，分辨旅途中空姐提供的哪些是「健康食物」，哪些是「無益食物」！這關需要先輸入現場通關密碼解鎖食物分類遊戲！',
-        unlockType: 'game_food_new', // 密碼解鎖小遊戲
+        description: '歡迎乘坐太古「小學」航空！請將食物進行分類，分辨旅途中空姐提供的哪些是「健康食物」，哪些是「無益食物」！這關需要先輸入現場通關密碼解鎖食物分類遊戲！',
+        unlockType: 'game_food_new',
         correctPassword: '1100',
         hint: '向現場老師索取密碼以解鎖食物分類遊戲。遊戲獲得 5 分滿分即可完成通關。',
         completed: false
@@ -439,7 +445,7 @@
         img: 'https://i.postimg.cc/2SF3SLzm/whatsapp-image-2024-09-26-at-3-30-55-pm-(1).jpg', 
         color: 'from-pink-500 to-rose-500',
         description: '在英文室中觀察海洋生物單字框 (Shark 🦈, Dolphin 🐬, Turtle 🐢, Octopus 🐙, Starfish ⭐), 選擇一種並在 iPad 畫布上畫出來。AI 將會即時猜出你畫的是哪種生物！',
-        unlockType: 'password', // 已由 english_drawing 改為純密碼驗證通關
+        unlockType: 'password',
         correctPassword: '2856',
         hint: '在英文室完成 AI 繪圖體驗後，向英文科老師索取 4 位數字密碼。',
         completed: false
@@ -448,7 +454,7 @@
         id: 10,
         floor: '3f',
         floorLabel: '三樓任務',
-        title: '任務１０：National Geographic 香港海洋生物', // 已完美更名為「香港海洋生物」
+        title: '任務１０：National Geographic 香港海洋生物',
         location: '三樓 National Geographic 國家地理雜誌海洋教育互動廊', 
         icon: 'fa-earth-asia',
         iconBg: 'bg-yellow-100 text-yellow-600',
@@ -487,22 +493,22 @@
         img: 'https://i.postimg.cc/Vvm1mNV6/whatsapp-image-2024-09-16-at-2-03-46-pm-2.jpg', 
         color: 'from-amber-500 to-yellow-500',
         description: '小太想利用圖形畫一幅漂亮的畫送給妹妹但不慢意。請小朋友在 iPad 上利用 AutoDraw 神奇畫筆功能：\n1. 畫出三個圓形，觀察 AI 自動幫你美化成了甚麼？（如雪人、毛毛蟲）。\n2. 自由畫出 2 種不同形狀，寫下一共用了多少圖形並自由著色！',
-        unlockType: 'password', // 已由 math_autodraw 改為純密碼驗證通關
+        unlockType: 'password',
         correctPassword: '30class',
         hint: '體驗形狀變變變後，向在場老師查詢並輸入數學角展板的密碼。',
         completed: false
       },
       {
         id: 13,
-        floor: '1f',
-        floorLabel: '一樓及梯間',
+        floor: 'gf',
+        floorLabel: '地下及梯間',
         title: '任務１３：Taikoo Star 性格強項',
-        location: '二樓梯間 & 地下升降機旁邊',
+        location: '地下及梯間',
         icon: 'fa-circle-check',
         iconBg: 'bg-purple-100 text-purple-600',
         img: 'https://i.postimg.cc/C1fd82FX/Whats-App-Image-2026-06-28-at-5-12-49-PM-(1).jpg', 
         color: 'from-purple-500 to-violet-600',
-        description: '走到二樓梯間及地下升降機旁邊，細心閱讀Taikoo Star的性格強項海報，回答洪熙樂與陳顥月兩位同學的性格強項是甚麼。探尋正向教育的奧秘！', 
+        description: '走到梯間及地下升降機旁邊，細心閱讀Taikoo Star的性格強項海報，回答洪熙樂與陳顥月兩位同學的性格強項是甚麼。探尋正向教育的奧秘！', 
         unlockType: 'quiz_taikoo_star_new',
         correctPassword: 'CC',
         hint: '在指定海報前尋找答案，選對正確選項即可通關。',
@@ -511,36 +517,29 @@
     ];
 
     let currentFilter = 'all';
-    let m7Unlocked = false; // 用於跟踪任務 7 的密碼解鎖狀態 (每會話獨立)
+    let m7Unlocked = false; // 用於控制任務7的密碼鎖
     let sciAns1 = '';
     let sciAns2 = '';
     let starNewAns1 = '';
     let starNewAns2 = '';
-    let congratsInterval = null; // 用於通關後持續五彩紙花的計時器
+    let congratsInterval = null;
 
-    // ==========================================
-    // 解決行內 HTML 屬性轉義引號衝突的全局 onerror 輔助函數
-    // ==========================================
-    function handleImageError(img, icon, iconBg) {
-      img.onerror = null; // 防止無限循環
-      const parent = img.parentElement;
-      if (parent) {
-        parent.innerHTML = `
-          <div class="w-24 h-24 rounded-full ${iconBg} flex items-center justify-center text-2xl shrink-0 shadow-inner">
-            <i class="fa-solid ${icon}"></i>
-          </div>
-        `;
-      }
-    }
-
-    function handleModalImageError(img, icon, iconBg) {
-      img.onerror = null; // 防止無限循環
-      const parent = img.parentElement;
-      if (parent) {
-        parent.className = `w-32 h-32 rounded-full ${iconBg} flex items-center justify-center text-4xl shrink-0 shadow-inner`;
-        parent.innerHTML = `<i class="fa-solid ${icon}"></i>`;
-      }
-    }
+    // 食物資料池 (任務 7 專用)
+    const foodPool = [
+      { name: '🍎 蘋果', type: 'healthy' },
+      { name: '🥦 西蘭花', type: 'healthy' },
+      { name: '🍌 香蕉', type: 'healthy' },
+      { name: '🥕 胡蘿蔔', type: 'healthy' },
+      { name: '🥛 牛奶', type: 'healthy' },
+      { name: '🍟 薯條', type: 'unhealthy' },
+      { name: '🍩 甜甜圈', type: 'unhealthy' },
+      { name: '🍕 披薩', type: 'unhealthy' },
+      { name: '🥤 汽水', type: 'unhealthy' },
+      { name: '🍬 糖果', type: 'unhealthy' }
+    ];
+    let m7ActiveFoods = [];
+    let m7CurrentFoodIndex = 0;
+    let foodScore = 0;
 
     // 儲存進度
     function saveProgress() {
@@ -564,15 +563,13 @@
       }
     }
 
-    // 更新通關進度
+    // 更新進度
     function updateGlobalProgress() {
       const completedCount = missions.filter(m => m.completed).length;
       const progressEl = document.getElementById('global-progress');
       if (progressEl) {
         progressEl.innerText = `${completedCount} / ${missions.length}`;
       }
-      
-      // 當順利完成 13 關後，自動跳出全通關賀喜視窗，不涉及任何證書下載！
       if (completedCount === missions.length) {
         openCongratsModal();
       }
@@ -595,7 +592,6 @@
 
       filtered.forEach(m => {
         const card = document.createElement('div');
-        // 如果通關，卡片邊框變鮮黃色（Sharp Yellow），背景帶有暖黃色
         const borderBgStyle = m.completed 
           ? 'border-yellow-400 bg-yellow-50/40 ring-4 ring-yellow-400/30' 
           : 'border-slate-100 bg-white';
@@ -603,12 +599,10 @@
         card.className = `rounded-3xl p-5 shadow-sm border ${borderBgStyle} hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 cursor-pointer flex flex-col justify-between relative overflow-hidden`;
         card.setAttribute('onclick', `openMissionModal(${m.id})`);
 
-        // 通關改為鮮黃色（Sharp Yellow）並顯示獎盃 icon
         const statusBadge = m.completed 
           ? `<span class="bg-yellow-400 text-slate-900 text-xs font-black px-3.5 py-1.5 rounded-full flex items-center space-x-1.5 shadow-md border-2 border-yellow-500 animate-pulse"><i class="fa-solid fa-trophy text-amber-700"></i> <span>已通關</span></span>`
           : `<span class="bg-slate-100 text-slate-500 text-xs font-bold px-3 py-1 rounded-full flex items-center space-x-1"><i class="fa-solid fa-lock"></i> <span>未解鎖</span></span>`;
 
-        // 判斷是否顯示圓形實景圖片 (放大至 w-24 h-24)，並設定優雅的 Fallback 機制，調用全局函數避免嵌套引號出錯
         const mediaHtml = m.img 
           ? `<img src="${m.img}" alt="${m.title}" class="w-24 h-24 rounded-full object-cover shrink-0 shadow-md border-2 border-taikoo-blue/20" onerror="handleImageError(this, '${m.icon}', '${m.iconBg}')">`
           : `<div class="w-24 h-24 rounded-full ${m.iconBg} flex items-center justify-center text-2xl shrink-0 shadow-inner">
@@ -676,7 +670,6 @@
       document.getElementById('modal-location').innerText = m.location;
       document.getElementById('modal-description').innerText = m.description;
 
-      // 在 Modal 內更換為超大尺寸的圓形實景圖 (w-32 h-32)，調用全局 handleModalImageError 函數防錯
       const modalIconContainer = document.getElementById('modal-icon-container');
       if (m.img) {
         modalIconContainer.className = "w-32 h-32 rounded-full overflow-hidden shrink-0 shadow-md border-2 border-white";
@@ -704,38 +697,27 @@
       activeMissionId = null;
     }
 
-    // 🗺️ 地圖模態框控制函數
     function openMapModal() {
-      const mapModal = document.getElementById('map-modal');
-      if (mapModal) mapModal.classList.remove('hidden');
+      document.getElementById('map-modal').classList.remove('hidden');
     }
 
     function closeMapModal() {
-      const mapModal = document.getElementById('map-modal');
-      if (mapModal) mapModal.classList.add('hidden');
+      document.getElementById('map-modal').classList.add('hidden');
     }
 
-    // 🏆 全通關大賀喜模態框控制函數
     function openCongratsModal() {
-      const congratsModal = document.getElementById('congrats-modal');
-      if (congratsModal) {
-        congratsModal.classList.remove('hidden');
-        triggerContinuousConfetti();
-      }
+      document.getElementById('congrats-modal').classList.remove('hidden');
+      triggerContinuousConfetti();
     }
 
     function closeCongratsModal() {
-      const congratsModal = document.getElementById('congrats-modal');
-      if (congratsModal) {
-        congratsModal.classList.add('hidden');
-      }
+      document.getElementById('congrats-modal').classList.add('hidden');
       if (congratsInterval) {
         clearInterval(congratsInterval);
         congratsInterval = null;
       }
     }
 
-    // 通關後連續燃放五彩爆花 5 秒
     function triggerContinuousConfetti() {
       triggerConfetti();
       if (congratsInterval) clearInterval(congratsInterval);
@@ -750,7 +732,7 @@
       }, 5000);
     }
 
-    // 動態交互區域渲染 (已完美移除了 AI 卡通相框、手寫、故事、AutoDraw 畫布)
+    // 動態交互區渲染 (純前端靜態比對與選擇題，排除任何 Gemini 依賴)
     function renderInteractiveArea(m) {
       const container = document.getElementById('modal-interactive-area');
       if (!container) return;
@@ -783,21 +765,18 @@
           `;
           break;
 
-        case 'game_cycle_new': // 任務二：卡路里+單車密碼雙重驗證 (答案已修正為 253 kcal)
+        case 'game_cycle_new':
           container.innerHTML = `
             <div class="bg-orange-50 border border-orange-100 rounded-2xl p-4 space-y-3">
               <h5 class="font-bold text-orange-800 text-sm"><i class="fa-solid fa-clipboard-question mr-1"></i> 「太」輕Zone 雙重挑戰驗證</h5>
-              
               <div class="space-y-1">
                 <label class="block text-base md:text-lg font-black text-slate-800 leading-relaxed py-1">1. 請輸入從小食部壁報找到的「5粒燒賣卡路里」 (kcal)</label>
-                <input type="number" id="m2-calorie-input" placeholder="請輸入數值" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-500 font-bold text-base md:text-lg" />
+                <input type="number" id="m2-calorie-input" placeholder="請輸入數值 (例如: 253)" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-500 font-bold text-base md:text-lg" />
               </div>
-
               <div class="space-y-1">
                 <label class="block text-base md:text-lg font-black text-slate-800 leading-relaxed py-1">2. 請輸入現場單車通關密碼</label>
-                <input type="text" id="m2-bike-pwd" placeholder="請輸入 4 位數字密碼" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-500 font-bold text-base md:text-lg" />
+                <input type="text" id="m2-bike-pwd" placeholder="請輸入 4 位數字密碼 (例如: 2561)" class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-orange-500 font-bold text-base md:text-lg" />
               </div>
-
               <button onclick="verifyMission2()" class="w-full py-3 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl text-base md:text-lg transition shadow-md">
                 驗證通關
               </button>
@@ -805,15 +784,11 @@
           `;
           break;
 
-        case 'quiz_m6': // 任務六：太古之星 (問題及選項均放大)
+        case 'quiz_m6':
           container.innerHTML = `
             <div class="bg-indigo-50 border border-indigo-100 rounded-2xl p-4 space-y-3 text-center">
               <h5 class="font-bold text-indigo-800 text-sm text-left"><i class="fa-solid fa-magnifying-glass-chart mr-1"></i> Star Wall 海報探索問答</h5>
-              
-              <p class="text-xl md:text-2xl font-black text-slate-900 leading-snug py-3">
-                游日翔同學的主項運動是甚麼？
-              </p>
-              
+              <p class="text-xl md:text-2xl font-black text-slate-900 leading-snug py-3">游日翔同學的主項運動是甚麼？</p>
               <div class="space-y-2.5 text-left">
                 <button onclick="submitQuizAnswer(6, 'A')" class="w-full p-4 bg-white hover:bg-indigo-100 border border-slate-200 hover:border-indigo-300 rounded-xl text-base md:text-lg font-black transition flex justify-between items-center shadow-sm">
                   <span>A. 足球</span>
@@ -832,7 +807,7 @@
           `;
           break;
 
-        case 'game_food_new': // 任務七：密碼驗證解鎖小遊戲
+        case 'game_food_new':
           if (!m7Unlocked) {
             container.innerHTML = `
               <div class="bg-sky-50 border border-sky-100 rounded-2xl p-4 space-y-3 text-left">
@@ -850,17 +825,14 @@
               </div>
             `;
           } else {
-            // 第二階段：食物大分類 (5 個不重複食物，答對 5 分通關)
             container.innerHTML = `
               <div class="bg-sky-50 border border-sky-100 rounded-2xl p-4 text-center space-y-3">
                 <h5 class="font-bold text-sky-800 text-sm"><i class="fa-solid fa-apple-whole mr-1"></i> 太古健康機艙食物大分類</h5>
                 <p class="text-base font-bold text-sky-900 leading-relaxed">分類健康食物與無益食物，答對 5 分即可直接通關徽章！</p>
-                
                 <div id="food-card" class="bg-white p-4 rounded-xl shadow-md border border-slate-100 inline-block min-w-[120px] transform transition">
                   <span id="food-emoji" class="text-4xl block mb-1">🍎</span>
                   <span id="food-name" class="text-xs font-bold text-slate-700">蘋果</span>
                 </div>
-
                 <div class="grid grid-cols-2 gap-3 mt-2">
                   <button onclick="classifyFoodNew('healthy')" class="p-3 bg-emerald-500 hover:bg-emerald-600 text-white font-bold rounded-xl text-sm transition flex flex-col items-center justify-center">
                     <span>💚 健康食物</span>
@@ -872,15 +844,14 @@
                 <p class="text-base font-bold text-slate-500">得分: <span id="food-score" class="text-sky-600 text-lg">0</span> / 5</p>
               </div>
             `;
-            setTimeout(startFoodGame, 50); // 自動重載
+            setTimeout(startFoodGame, 50);
           }
           break;
 
-        case 'quiz_ocean': // 任務 8 海洋保育問答 (問題及選項均放大)
+        case 'quiz_ocean':
           container.innerHTML = `
             <div class="bg-blue-50 border border-blue-100 rounded-2xl p-4 space-y-4 text-left">
               <h5 class="font-bold text-blue-800 text-sm"><i class="fa-solid fa-circle-question mr-1"></i> 暑期自學計劃—海洋保育問答</h5>
-              
               <div class="space-y-2">
                 <p class="text-xl md:text-2xl font-black text-slate-900 leading-relaxed py-1">問題 1：太古小學的學生，去了哪 2 個地方親親海洋小動物？（複選題，請勾選 2 個正確選項）</p>
                 <div class="grid grid-cols-1 gap-2">
@@ -898,7 +869,6 @@
                   </label>
                 </div>
               </div>
-
               <div class="space-y-2 border-t border-blue-100 pt-3">
                 <p class="text-xl md:text-2xl font-black text-slate-900 leading-relaxed py-1">問題 2：太古小學同學和家人在家裡製作什麼支持海洋保育？</p>
                 <div class="grid grid-cols-1 gap-2">
@@ -916,7 +886,6 @@
                   </label>
                 </div>
               </div>
-
               <button onclick="submitOceanQuiz()" class="w-full py-3 bg-blue-500 hover:bg-blue-600 text-white font-black rounded-xl text-base md:text-lg shadow-md transition">
                 提交問答挑戰
               </button>
@@ -924,11 +893,10 @@
           `;
           break;
 
-        case 'quiz_national_geographic': // 任務 10 國家地理問答 (問題及選項均放大)
+        case 'quiz_national_geographic':
           container.innerHTML = `
             <div class="bg-yellow-50 border border-yellow-100 rounded-2xl p-4 space-y-4 text-left">
               <h5 class="font-bold text-yellow-800 text-sm"><i class="fa-solid fa-circle-question mr-1"></i> National Geographic 國家地理尋寶問答</h5>
-              
               <div class="space-y-2">
                 <p class="text-xl md:text-2xl font-black text-slate-900 leading-relaxed py-1">問題：根據三樓 National Geographic 壁畫，香港水域常看見哪種粉紅色的珍貴海洋哺乳類動物？</p>
                 <div class="grid grid-cols-1 gap-2.5">
@@ -950,29 +918,26 @@
           `;
           break;
 
-        case 'quiz_science': // 任務 11 科學室問答 (問題及選項均放大，移除 AI 科學助教)
+        case 'quiz_science':
           container.innerHTML = `
             <div class="bg-cyan-50 border border-cyan-100 rounded-2xl p-4 space-y-4 text-left">
               <h5 class="font-bold text-cyan-800 text-sm"><i class="fa-solid fa-flask mr-1"></i> 科學室 STEAM 探索問答</h5>
-              
               <div class="space-y-2">
                 <p class="text-xl md:text-2xl font-black text-slate-900 leading-relaxed py-1">1. 太古小學六年級的跨學科STEAM活動作品是甚麼？</p>
                 <div class="grid grid-cols-1 gap-2">
-                  <button onclick="selectSciQ(1, 'A', this)" class="sci-btn-1 p-4 bg-white border border-cyan-200 rounded-xl text-base md:text-lg font-bold hover:bg-cyan-100 transition text-left shadow-sm">A. 土壤濕度感應裝置</button>
-                  <button onclick="selectSciQ(1, 'B', this)" class="sci-btn-1 p-4 bg-white border border-cyan-200 rounded-xl text-base md:text-lg font-bold hover:bg-cyan-100 transition text-left shadow-sm">B. 機械人</button>
-                  <button onclick="selectSciQ(1, 'C', this)" class="sci-btn-1 p-4 bg-white border border-cyan-200 rounded-xl text-base md:text-lg font-bold hover:bg-cyan-100 transition text-left shadow-sm">C. 保溫瓶</button>
+                  <button onclick="selectSciQ('1', 'A', this)" class="sci-btn-1 p-4 bg-white border border-cyan-200 rounded-xl text-base md:text-lg font-bold hover:bg-cyan-100 transition text-left shadow-sm">A. 土壤濕度感應裝置</button>
+                  <button onclick="selectSciQ('1', 'B', this)" class="sci-btn-1 p-4 bg-white border border-cyan-200 rounded-xl text-base md:text-lg font-bold hover:bg-cyan-100 transition text-left shadow-sm">B. 機械人</button>
+                  <button onclick="selectSciQ('1', 'C', this)" class="sci-btn-1 p-4 bg-white border border-cyan-200 rounded-xl text-base md:text-lg font-bold hover:bg-cyan-100 transition text-left shadow-sm">C. 保溫瓶</button>
                 </div>
               </div>
-
               <div class="space-y-2 border-t border-cyan-100 pt-3">
                 <p class="text-xl md:text-2xl font-black text-slate-900 leading-relaxed py-1">2. 太古小學電腦科會於三、四年級運用 AI工具 製作甚麼？（提示：留意展板）</p>
                 <div class="grid grid-cols-1 gap-2">
-                  <button onclick="selectSciQ(2, 'A', this)" class="sci-btn-2 p-4 bg-white border border-cyan-200 rounded-xl text-base md:text-lg font-bold hover:bg-cyan-100 transition text-left shadow-sm">A. 手機程式</button>
-                  <button onclick="selectSciQ(2, 'B', this)" class="sci-btn-2 p-4 bg-white border border-cyan-200 rounded-xl text-base md:text-lg font-bold hover:bg-cyan-100 transition text-left shadow-sm">B. 匯報工具</button>
-                  <button onclick="selectSciQ(2, 'C', this)" class="sci-btn-2 p-4 bg-white border border-cyan-200 rounded-xl text-base md:text-lg font-bold hover:bg-cyan-100 transition text-left shadow-sm">C. 漫畫</button>
+                  <button onclick="selectSciQ('2', 'A', this)" class="sci-btn-2 p-4 bg-white border border-cyan-200 rounded-xl text-base md:text-lg font-bold hover:bg-cyan-100 transition text-left shadow-sm">A. 手機程式</button>
+                  <button onclick="selectSciQ('2', 'B', this)" class="sci-btn-2 p-4 bg-white border border-cyan-200 rounded-xl text-base md:text-lg font-bold hover:bg-cyan-100 transition text-left shadow-sm">B. 匯報工具</button>
+                  <button onclick="selectSciQ('2', 'C', this)" class="sci-btn-2 p-4 bg-white border border-cyan-200 rounded-xl text-base md:text-lg font-bold hover:bg-cyan-100 transition text-left shadow-sm">C. 漫畫</button>
                 </div>
               </div>
-
               <button onclick="submitSciQuiz()" class="w-full py-3 bg-cyan-500 hover:bg-cyan-600 text-white font-black rounded-xl text-base md:text-lg shadow-md transition">
                 提交答案
               </button>
@@ -980,45 +945,56 @@
           `;
           break;
 
-        case 'quiz_taikoo_star_new': // 任務 13：Taikoo Star 性格強項 (問題與選項按鈕放大)
+        case 'quiz_taikoo_star_new':
           container.innerHTML = `
             <div class="bg-purple-50 border border-purple-100 rounded-2xl p-4 space-y-4 text-left">
               <h5 class="font-bold text-purple-800 text-sm"><i class="fa-solid fa-circle-question mr-1"></i> Taikoo Star 性格強項大探秘</h5>
-              
               <div class="space-y-2">
                 <p class="text-xl md:text-2xl font-black text-slate-900 leading-relaxed py-1">1. 3A班洪熙樂同學的性格強項是甚麼？（提示：2/F梯間）</p>
                 <div class="grid grid-cols-1 gap-2">
-                  <button onclick="selectStarQNew(1, 'A', this)" class="q-star-btn-1 p-4 bg-white border border-purple-200 rounded-xl text-base md:text-lg font-bold hover:bg-purple-100 transition text-left shadow-sm">A. 愛</button>
-                  <button onclick="selectStarQNew(1, 'B', this)" class="q-star-btn-1 p-4 bg-white border border-purple-200 rounded-xl text-base md:text-lg font-bold hover:bg-purple-100 transition text-left shadow-sm">B. 創造力</button>
-                  <button onclick="selectStarQNew(1, 'C', this)" class="q-star-btn-1 p-4 bg-white border border-purple-200 rounded-xl text-base md:text-lg font-bold hover:bg-purple-100 transition text-left shadow-sm">C. 熱情與幹勁</button>
+                  <button onclick="selectStarQNew('1', 'A', this)" class="q-star-btn-1 p-4 bg-white border border-purple-200 rounded-xl text-base md:text-lg font-bold hover:bg-purple-100 transition text-left shadow-sm">A. 愛</button>
+                  <button onclick="selectStarQNew('1', 'B', this)" class="q-star-btn-1 p-4 bg-white border border-purple-200 rounded-xl text-base md:text-lg font-bold hover:bg-purple-100 transition text-left shadow-sm">B. 創造力</button>
+                  <button onclick="selectStarQNew('1', 'C', this)" class="q-star-btn-1 p-4 bg-white border border-purple-200 rounded-xl text-base md:text-lg font-bold hover:bg-purple-100 transition text-left shadow-sm">C. 熱情與幹勁</button>
                 </div>
               </div>
-
               <div class="space-y-2 border-t border-purple-100 pt-3">
                 <p class="text-xl md:text-2xl font-black text-slate-900 leading-relaxed py-1">2. 4B班陳顥月同學的性格強項是甚麼？（提示：G/F升降機旁邊）</p>
                 <div class="grid grid-cols-1 gap-2">
-                  <button onclick="selectStarQNew(2, 'A', this)" class="q-star-btn-2 p-4 bg-white border border-purple-200 rounded-xl text-base md:text-lg font-bold hover:bg-purple-100 transition text-left shadow-sm">A. 勤奮</button>
-                  <button onclick="selectStarQNew(2, 'B', this)" class="q-star-btn-2 p-4 bg-white border border-purple-200 rounded-xl text-base md:text-lg font-bold hover:bg-purple-100 transition text-left shadow-sm">B. 社交智慧</button>
-                  <button onclick="selectStarQNew(2, 'C', this)" class="q-star-btn-2 p-4 bg-white border border-purple-200 rounded-xl text-base md:text-lg font-bold hover:bg-purple-100 transition text-left shadow-sm">C. 細心</button>
+                  <button onclick="selectStarQNew('2', 'A', this)" class="q-star-btn-2 p-4 bg-white border border-purple-200 rounded-xl text-base md:text-lg font-bold hover:bg-purple-100 transition text-left shadow-sm">A. 勤奮</button>
+                  <button onclick="selectStarQNew('2', 'B', this)" class="q-star-btn-2 p-4 bg-white border border-purple-200 rounded-xl text-base md:text-lg font-bold hover:bg-purple-100 transition text-left shadow-sm">B. 社交智慧</button>
+                  <button onclick="selectStarQNew('2', 'C', this)" class="q-star-btn-2 p-4 bg-white border border-purple-200 rounded-xl text-base md:text-lg font-bold hover:bg-purple-100 transition text-left shadow-sm">C. 細心</button>
                 </div>
               </div>
-
               <button onclick="submitStarQuizNew()" class="w-full py-3 bg-purple-500 hover:bg-purple-600 text-white font-black rounded-xl text-base md:text-lg shadow-md transition">
                 提交答案
               </button>
             </div>
           `;
-          starNewAns1 = '';
-          starNewAns2 = '';
           break;
       }
     }
 
     // ==========================================
-    // 答題與小遊戲交互核心
+    // 答題與小遊戲交互
     // ==========================================
+    function verifyPassword(missionId) {
+      const input = document.getElementById('mission-pwd-input');
+      if (!input) return;
+      const pwd = input.value.trim().toUpperCase();
+      const m = missions.find(x => x.id === missionId);
+      if (pwd === m.correctPassword.toUpperCase()) {
+        m.completed = true;
+        saveProgress();
+        showToast('🔓 通關成功！你獲得了一個探索徽章！', 'success');
+        updateGlobalProgress();
+        renderMissions();
+        renderInteractiveArea(m);
+        confetti({ particleCount: 60, spread: 40, origin: { y: 0.8 } });
+      } else {
+        showToast('❌ 密碼不正確，請再試一次或尋找關卡提示。', 'error');
+      }
+    }
 
-    // 任務二驗證 (已將卡路里正確答案 300 修改為 253)
     function verifyMission2() {
       const calorieInput = document.getElementById('m2-calorie-input').value.trim();
       const pwdInput = document.getElementById('m2-bike-pwd').value.trim().toUpperCase();
@@ -1037,7 +1013,6 @@
       }
     }
 
-    // 任務六驗證
     function submitQuizAnswer(missionId, answer) {
       const m = missions.find(x => x.id === missionId);
       if (answer === 'A') {
@@ -1053,7 +1028,6 @@
       }
     }
 
-    // 任務七解鎖遊戲
     function unlockM7Game() {
       const pwdInput = document.getElementById('m7-unlock-pwd').value.trim();
       if (pwdInput === '1100') {
@@ -1066,23 +1040,6 @@
         showToast('❌ 密碼不正確，請詢問機艙服務員索取密碼！', 'error');
       }
     }
-
-    // 食物資料池 (任務 7 專用)
-    const foodPool = [
-      { name: '🍎 蘋果', type: 'healthy' },
-      { name: '🥦 西蘭花', type: 'healthy' },
-      { name: '🍌 香蕉', type: 'healthy' },
-      { name: '🥕 胡蘿蔔', type: 'healthy' },
-      { name: '🥛 牛奶', type: 'healthy' },
-      { name: '🍟 薯條', type: 'unhealthy' },
-      { name: '🍩 甜甜圈', type: 'unhealthy' },
-      { name: '🍕 披薩', type: 'unhealthy' },
-      { name: '🥤 汽水', type: 'unhealthy' },
-      { name: '🍬 糖果', type: 'unhealthy' }
-    ];
-    let m7ActiveFoods = [];
-    let m7CurrentFoodIndex = 0;
-    let foodScore = 0;
 
     function startFoodGame() {
       m7ActiveFoods = [...foodPool].sort(() => 0.5 - Math.random()).slice(0, 5);
@@ -1135,27 +1092,12 @@
         setTimeout(() => {
           showToast('😢 必須獲得 5 分滿分才能通關喔！請重新挑戰！', 'error');
           startFoodGame();
-          const card = document.getElementById('food-card');
-          if (card) {
-            card.classList.add('scale-75', 'opacity-0');
-            setTimeout(() => {
-              card.classList.remove('scale-75', 'opacity-0');
-            }, 150);
-          }
         }, 500);
       } else {
-        const card = document.getElementById('food-card');
-        if (card) {
-          card.classList.add('scale-75', 'opacity-0');
-          setTimeout(() => {
-            nextFoodNew();
-            card.classList.remove('scale-75', 'opacity-0');
-          }, 150);
-        }
+        nextFoodNew();
       }
     }
 
-    // 任務 8 海洋保育驗證
     function submitOceanQuiz() {
       const m = missions.find(x => x.id === 8);
       const q1a = document.getElementById('ocean-q1-a').checked;
@@ -1180,7 +1122,6 @@
       }
     }
 
-    // 任務 10 國家地理驗證
     function submitNatGeoAnswer(ans) {
       const m = missions.find(x => x.id === 10);
       if (ans === 'A') {
@@ -1196,9 +1137,8 @@
       }
     }
 
-    // 任務 11 科學室答題追蹤變數
     function selectSciQ(qNum, value, btn) {
-      if (qNum === 1) {
+      if (qNum === '1') {
         sciAns1 = value;
         document.querySelectorAll('.sci-btn-1').forEach(b => b.classList.remove('bg-cyan-100', 'border-cyan-500'));
       } else {
@@ -1208,7 +1148,6 @@
       btn.classList.add('bg-cyan-100', 'border-cyan-500');
     }
 
-    // 任務 11 答題提交
     function submitSciQuiz() {
       if (!sciAns1 || !sciAns2) {
         showToast('請先選取答案喔！', 'info');
@@ -1228,9 +1167,8 @@
       }
     }
 
-    // 任務 13 性格強項答題追蹤變數
     function selectStarQNew(qNum, value, btn) {
-      if (qNum === 1) {
+      if (qNum === '1') {
         starNewAns1 = value;
         document.querySelectorAll('.q-star-btn-1').forEach(b => b.classList.remove('bg-purple-100', 'border-purple-500'));
       } else {
@@ -1240,7 +1178,6 @@
       btn.classList.add('bg-purple-100', 'border-purple-500');
     }
 
-    // 任務 13 性格強項驗證
     function submitStarQuizNew() {
       if (!starNewAns1 || !starNewAns2) {
         showToast('請選好兩道題目喔！', 'info');
@@ -1260,24 +1197,27 @@
       }
     }
 
-    // 驗證普通密碼關卡
-    function verifyPassword(missionId) {
-      const input = document.getElementById('mission-pwd-input');
-      if (!input) return;
-      const pwd = input.value.trim().toUpperCase();
-      const m = missions.find(x => x.id === missionId);
-      if (pwd === m.correctPassword.toUpperCase()) {
-        m.completed = true;
-        saveProgress();
-        showToast('🔓 通關成功！你獲得了一個探索徽章！', 'success');
-        updateGlobalProgress();
-        renderMissions();
-        renderInteractiveArea(m);
-        confetti({ particleCount: 60, spread: 40, origin: { y: 0.8 } });
-      } else {
-        showToast('❌ 密碼不正確，請再試一次或尋找關卡提示。', 'error');
-        input.classList.add('border-rose-400', 'animate-shake');
-        setTimeout(() => input.classList.remove('border-rose-400', 'animate-shake'), 1000);
+    // ==========================================
+    // 全局輔助與提示
+    // ==========================================
+    function handleImageError(img, icon, iconBg) {
+      img.onerror = null;
+      const parent = img.parentElement;
+      if (parent) {
+        parent.innerHTML = `
+          <div class="w-24 h-24 rounded-full ${iconBg} flex items-center justify-center text-2xl shrink-0 shadow-inner">
+            <i class="fa-solid ${icon}"></i>
+          </div>
+        `;
+      }
+    }
+
+    function handleModalImageError(img, icon, iconBg) {
+      img.onerror = null;
+      const parent = img.parentElement;
+      if (parent) {
+        parent.className = `w-32 h-32 rounded-full ${iconBg} flex items-center justify-center text-4xl shrink-0 shadow-inner`;
+        parent.innerHTML = `<i class="fa-solid ${icon}"></i>`;
       }
     }
 
@@ -1285,6 +1225,7 @@
       const toast = document.getElementById('custom-toast');
       const icon = document.getElementById('toast-icon');
       const msg = document.getElementById('toast-message');
+      if (!toast || !icon || !msg) return;
       msg.innerText = message;
       if (type === 'success') {
         icon.innerHTML = '✨';
@@ -1311,18 +1252,13 @@
       }());
     }
 
-    // 遊戲開始按鈕觸發函數
+    // 啟動遊玩
     function startGame() {
-      // 隱藏起跑畫面，顯示主遊戲面板
       document.getElementById('splash-screen').classList.add('hidden');
       document.getElementById('game-board').classList.remove('hidden');
-
-      // 瞬間並非同步載入進度與渲染卡片，確保萬無一失
       loadProgress();
       renderMissions();
       updateGlobalProgress();
-
-      // 給予熱烈爆發的紙花慶祝效果！
       triggerConfetti();
     }
   </script>
